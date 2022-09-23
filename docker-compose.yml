@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: ./zpi
+    command: python manage.py runserver 0.0.0.0:8000
+    container_name: web
+    volumes:
+      - ./zpi/:/usr/src/zpi/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+  db:
+    image: postgres:12.0-alpine
+    container_name: db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.db
+    ports:
+      - 5432:5432
+
+  frontend:
+    command : npm start
+    container_name: front
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend/:/usr/src/frontend/
+    environment:
+      - WATCHPACK_POLLING=true
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
