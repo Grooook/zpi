@@ -3,13 +3,19 @@ from rest_framework.response import Response
 
 from .serializers import YourSerializer
 
-class YourView(views.APIView):
+
+class LoginView(views.APIView):
 
     @classmethod
     def get_extra_actions(cls):
         return []
 
-    def get(self, request):
-        yourdata= [{"likes": 10, "comments": 0}, {"likes": 4, "comments": 23}]
-        results = YourSerializer(yourdata, many=True).data
-        return Response(results)
+    def post(self, request):
+        index = request.data.get('index')
+        password = request.data.get('password')
+        if (index == 'test' and password == 'test'):
+            result = {'status': "ok", 'message': "You are successfully login",
+                      "accessToken": "accessToken", "user": []}
+        else:
+            result = {'status': "fail", 'message': "Student ID or password s incorrect"}
+        return Response(result)

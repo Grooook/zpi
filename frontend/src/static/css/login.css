@@ -1,0 +1,41 @@
+.container{
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    border: .17em solid #eee;
+    height: 20em;
+    min-width: 60vh;
+}
+
+.forms-inputs {
+    position: relative
+}
+
+.forms-inputs span {
+    position: absolute;
+    top: -1.1em;
+    left: .6em;
+    background-color: #fff;
+    padding: .3em .65em;
+    font-size: .9em
+}
+
+.forms-inputs input {
+    height: 3em;
+    border: .17em solid #eee
+}
+
+.forms-inputs input:focus {
+    box-shadow: none;
+    outline: none;
+    border: .17em solid #000
+}
+
+.btn {
+    height: 3em
+}
