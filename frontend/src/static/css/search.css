@@ -1,42 +1,41 @@
-.container{
-  
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
 }
 
 .input-group input {
-    height: 3em;
-    border: .17em solid #eee;
-    border-radius: .3em 0 0 .3em;
+  height: 3em;
+  border: 0.17em solid #eee;
+  border-radius: 0.3em 0 0 0.3em;
 }
 
 .input-group input:hover {
-    box-shadow: none;
-    outline: none;
-    border: .17em solid rgb(130, 128, 128)
+  box-shadow: none;
+  outline: none;
+  border: 0.17em solid rgb(130, 128, 128);
 }
 
 .input-group input:focus {
-    box-shadow: none;
-    outline: none;
-    border: .17em solid #000;
+  box-shadow: none;
+  outline: none;
+  border: 0.17em solid #000;
 }
 
 .input-group button {
-    height: 2.9em;
-    border-radius: 0 .3em .3em 0;
+  height: 2.9em;
+  border-radius: 0 0.3em 0.3em 0;
 }
 
 .input-group button:hover {
-    box-shadow: none;
-    border: .17em solid #4188f3;
-    background-color: #0d6efd;
+  box-shadow: none;
+  border: 0.17em solid #4188f3;
+  background-color: #0d6efd;
 }
 
 .input-group button:focus {
-    box-shadow: none;
-    border: .17em solid #4188f3;
-    background-color: #0d6efd;
+  box-shadow: none;
+  border: 0.17em solid #4188f3;
+  background-color: #0d6efd;
 }

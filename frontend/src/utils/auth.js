@@ -1,4 +1,3 @@
-
 export function authLoginUser(token, user) {
   localStorage.setItem("accessToken", token);
   localStorage.setItem("user", user);
@@ -9,7 +8,7 @@ export function authlogoutUser() {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("user");
   localStorage.removeItem("isAuthenticated");
-  redirect('/login')
+  redirect("/login");
 }
 
 export function isUserAuthenticated() {

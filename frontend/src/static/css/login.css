@@ -1,41 +1,40 @@
-.container{
-  
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .card {
-    border: .17em solid #eee;
-    height: 20em;
-    min-width: 60vh;
+  border: 0.17em solid #eee;
+  height: 20em;
+  min-width: 60vh;
 }
 
 .forms-inputs {
-    position: relative
+  position: relative;
 }
 
 .forms-inputs span {
-    position: absolute;
-    top: -1.1em;
-    left: .6em;
-    background-color: #fff;
-    padding: .3em .65em;
-    font-size: .9em
+  position: absolute;
+  top: -1.1em;
+  left: 0.6em;
+  background-color: #fff;
+  padding: 0.3em 0.65em;
+  font-size: 0.9em;
 }
 
 .forms-inputs input {
-    height: 3em;
-    border: .17em solid #eee
+  height: 3em;
+  border: 0.17em solid #eee;
 }
 
 .forms-inputs input:focus {
-    box-shadow: none;
-    outline: none;
-    border: .17em solid #000
+  box-shadow: none;
+  outline: none;
+  border: 0.17em solid #000;
 }
 
 .btn {
-    height: 3em
+  height: 3em;
 }
