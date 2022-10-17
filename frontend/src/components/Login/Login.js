@@ -2,28 +2,18 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { authLoginUser } from "utils/auth";
 import swal from "sweetalert";
+import { login } from "utils/api";
 import "locale/i18n";
 import "static/css/login.css";
-import { API_URL } from "constants/index";
 
 const Login = () => {
   const { t } = useTranslation();
   const [index, setIndex] = useState();
   const [password, setPassword] = useState();
 
-  async function loginUser(credentials) {
-    return fetch("http://localhost:8000/api/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    }).then((data) => data.json());
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await loginUser({
+    const response = await login({
       index,
       password,
     });
