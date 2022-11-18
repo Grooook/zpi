@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path, include
 
 urlpatterns = [
+    path('', include('front.urls')),
     path('api/', include('api.urls')),
 ]
 

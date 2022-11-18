@@ -24,21 +24,21 @@ services:
     ports:
       - 5432:5432
 
-  frontend:
-    command : npm start
-    container_name: front
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend/:/usr/src/frontend/
-    environment:
-      - WATCHPACK_POLLING=true
-    ports:
-      - "3000:3000"
-    stdin_open: true
-    depends_on:
-      - web
+  # frontend:
+  #   command : npm start
+  #   container_name: front
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./frontend/:/usr/src/frontend/
+  #   environment:
+  #     - WATCHPACK_POLLING=true
+  #   ports:
+  #     - "3000:3000"
+  #   stdin_open: true
+  #   depends_on:
+  #     - web
 
 volumes:
   postgres_data:

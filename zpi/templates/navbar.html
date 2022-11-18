@@ -1,0 +1,63 @@
+{% load static %}
+{% load i18n %}
+
+{% block scripts %}
+  <link href="{% static 'css/flag.css' %}" rel="stylesheet">
+{% endblock scripts %}
+
+<nav class="navbar navbar-light bg-light">
+  <div class="d-flex justify-content-between mx-5 w-100">
+    <div>
+      <a class="navbar-brand" href="/">
+        SZW
+      </a>
+    </div>
+    <div class="d-flex">
+        {% if request.user.is_authenticated %}
+            <div class="d-flex">
+              <a class="nav-link active" aria-current="page" href="#">
+                {% translate "All applications" %}
+              </a>
+              <a class="nav-link active" aria-current="page" href="#">
+                {% translate "My applications" %}
+              </a>
+              <a
+                href="#"
+                onClick={logout}
+                class="nav-link active"
+                aria-current="page"
+              >
+                {% translate "Logout" %}
+              </a>
+            </div>
+        {% else %}
+            <div>
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/login"
+              >
+                {% translate "Login" %}
+              </a>
+            </div>
+      {% endif %}
+        <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+          <input name="next" type="hidden" value="{{ redirect_to }}">
+          {% get_current_language as LANGUAGE_CODE %}
+          {% get_available_languages as LANGUAGES %}
+          {% get_language_info_list for LANGUAGES as languages %}
+          {% for language in languages %}
+            {% if language.code != LANGUAGE_CODE %}
+              <input name="language" type="hidden" value="{{ language.code }}">
+              {% if language.code == "pl" %}
+                <input type="image" class="flag" src="{% static 'img/en_flag.svg' %}" alt="Submit" />
+              {% else %}
+                <input type="image" class="flag" src="{% static 'img/pl_flag.svg' %}" alt="Submit" />
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </form>
+    </div>
+  </div>
+  
+</nav>
