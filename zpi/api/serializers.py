@@ -1,6 +1,9 @@
 from rest_framework import serializers
 
-class YourSerializer(serializers.Serializer):
-   """Your data serializer, define your fields here."""
-   comments = serializers.IntegerField()
-   likes = serializers.IntegerField()
+from .models import User
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ('password', )

@@ -1,3 +1,12 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+
+admin.site.register(User)
+admin.site.register(Application)
+admin.site.register(FieldType)
+admin.site.register(Property)
+admin.site.register(UserApplication)
+admin.site.register(UserApplicationProperty)
+admin.site.register(ApplicationHistory)
+

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    "rest_framework.authtoken",
     'api',
     'front',
 ]
@@ -64,8 +65,11 @@ CORS_ORIGIN_WHITELIST = [
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
+        'rest_framework.permissions.IsAuthenticated',
     ]
 }
 
@@ -166,3 +170,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
+
+AUTH_USER_MODEL = 'api.User'
+
+expiring_time = 15*60
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = expiring_time

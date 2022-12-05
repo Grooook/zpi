@@ -13,7 +13,8 @@
       </a>
     </div>
     <div class="d-flex">
-        {% if request.user.is_authenticated %}
+<!--      {{request.session.user}}-->
+        {% if request.session.is_authenticated %}
             <div class="d-flex">
               <a class="nav-link active" aria-current="page" href="#">
                 {% translate "All applications" %}
@@ -22,8 +23,7 @@
                 {% translate "My applications" %}
               </a>
               <a
-                href="#"
-                onClick={logout}
+                href="/logout"
                 class="nav-link active"
                 aria-current="page"
               >
@@ -40,7 +40,7 @@
                 {% translate "Login" %}
               </a>
             </div>
-      {% endif %}
+        {% endif %}
         <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
           <input name="next" type="hidden" value="{{ redirect_to }}">
           {% get_current_language as LANGUAGE_CODE %}

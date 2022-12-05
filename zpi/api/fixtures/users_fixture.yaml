@@ -1,0 +1,54 @@
+- model: api.user
+  pk: 1
+  fields:
+    password: pbkdf2_sha256$390000$Ee4Icb4xSOWLPMDdD1vP2i$GA1wYNqHWQazLV2e36Hlrm5BePyXyiogtqD6YiPFM/U=
+    last_login: null
+    user_id: null
+    email: admin@example.com
+    username: Admin Admin
+    birth_date: null
+    name: admin name
+    surname: admin surname
+    is_admin: true
+    is_active: true
+    is_teacher: false
+    is_staff: true
+    is_dean: false
+    is_super_teacher: false
+    is_superuser: true
+- model: api.user
+  pk: 2
+  fields:
+    password: pbkdf2_sha256$390000$ZKtnFZ6ktfLaPlvgcqeoxR$XsLfCWZAV5wQ+gK4fcAhnjEIZl07r7HYBeICKjjYjXI=
+    last_login: null
+    user_id: null
+    email: 248795@example.com
+    username: pwr342784
+    birth_date: null
+    name: Hleb
+    surname: Liaonik
+    is_admin: false
+    is_active: true
+    is_teacher: false
+    is_staff: false
+    is_dean: false
+    is_super_teacher: false
+    is_superuser: false
+- model: api.user
+  pk: 3
+  fields:
+    password: pbkdf2_sha256$390000$khP7TSfq79D6jznuvcxvas$zezLSO4bMn2I9q640uCQfkMZry9RX4SFhBrn1MFbjAk=
+    last_login: null
+    user_id: null
+    email: pracownik@example.com
+    username: p1
+    birth_date: null
+    name: p1
+    surname: p1
+    is_admin: false
+    is_active: true
+    is_teacher: false
+    is_staff: true
+    is_dean: false
+    is_super_teacher: false
+    is_superuser: true
