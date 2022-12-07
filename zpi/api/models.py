@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator
 
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, email, username, name, surname, password):
+    def create_user(self, email, username, name, surname, password, department):
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -16,20 +16,23 @@ class MyAccountManager(BaseUserManager):
             name=name,
             surname=surname,
             password=password,
+            department=department
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, username, name, surname, password):
+    def create_superuser(self, email, username, name, surname, password, department):
         user = self.create_user(
             email=self.normalize_email(email),
             username=username,
             name=name,
             surname=surname,
             password=password,
+            department=department,
         )
+        user.is_student =True
         user.is_active = True
         user.is_admin = True
         user.is_staff = True
@@ -51,12 +54,13 @@ class User(AbstractBaseUser):
     birth_date = models.CharField(max_length=30, blank=True, null=True, default=None)
     name = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
-    is_admin = models.BooleanField(default=False)
+    department = models.ForeignKey('Department', on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
-    is_teacher = models.BooleanField(default=False)
+    is_student = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
     is_dean = models.BooleanField(default=False)
-    is_super_teacher = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
@@ -72,14 +76,33 @@ class User(AbstractBaseUser):
 
 
 class Application(models.Model):
-    name = models.CharField(max_length=127)
+    name = models.CharField(max_length=127, unique=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     expired = models.DateField(blank=True, null=True)
     last_update = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=False)
-    parent = models.ForeignKey('Application', on_delete=models.CASCADE, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
     file = models.FileField(upload_to='documents/')
+
+    def __str__(self):
+        return self.name
+
+
+class Department(models.Model):
+    short_name = models.CharField(max_length=5)
+    name = models.CharField(max_length=127)
+
+    def __str__(self):
+        return self.short_name
+
+
+class ApplicationDepartment(models.Model):
+    application = models.ForeignKey(Application, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.application.name
+
 
 
 class FieldType(models.Model):

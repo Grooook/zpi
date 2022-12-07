@@ -1,0 +1,65 @@
+- model: api.department
+  pk: 2
+  fields:
+    short_name: W01
+    name: Wydział Architektury
+- model: api.department
+  pk: 3
+  fields:
+    short_name: W02
+    name: Wydział Budownictwa Lądowego i Wodnego
+- model: api.department
+  pk: 4
+  fields:
+    short_name: W03
+    name: Wydział Chemiczny
+- model: api.department
+  pk: 5
+  fields:
+    short_name: W04
+    name: Wydział Wydział Informatyki i Telekomunikacji
+- model: api.department
+  pk: 6
+  fields:
+    short_name: W05
+    name: Wydział Elektryczny
+- model: api.department
+  pk: 7
+  fields:
+    short_name: W06
+    name: Wydział Geoinżynierii, Górnictwa i Geologii
+- model: api.department
+  pk: 8
+  fields:
+    short_name: W07
+    name: Wydział Inżynierii Środowiska
+- model: api.department
+  pk: 9
+  fields:
+    short_name: W08
+    name: Wydział Zarządzania
+- model: api.department
+  pk: 10
+  fields:
+    short_name: W09
+    name: Wydział Mechaniczno-Energetyczny
+- model: api.department
+  pk: 11
+  fields:
+    short_name: W10
+    name: Wydział Mechaniczny
+- model: api.department
+  pk: 12
+  fields:
+    short_name: W11
+    name: Wydział Podstawowych Problemów Techniki
+- model: api.department
+  pk: 13
+  fields:
+    short_name: W12
+    name: Wydział Elektroniki, Fotoniki i Mikrosystemów
+- model: api.department
+  pk: 14
+  fields:
+    short_name: W13
+    name: Wydział Matematyki

@@ -4,29 +4,28 @@
 
 {% block title %}Home{% endblock title %}
 {% block scripts %}
-  <link href="{% static 'css/search.css' %}" rel="stylesheet">
+<link href="{% static 'css/search.css' %}" rel="stylesheet">
+<script src="{% static 'js/main_search.js' %}"></script>
 {% endblock scripts %}
 {% block content %}
-    <form method="POST">
-        <div class="container mb-5">
-            <div class="input-group mb-3">
-            <input
-                type="text"
+<div class="container mb-5">
+    <div class="input-group mb-3">
+        <input
                 class="form-control"
+                id="input"
                 list="applications"
-                placeholder="{% translate "Start typing application name..." %}"
-            />
-            <datalist id="applications">
-                {% for application in context %}
-                    <option value="{{ application }}">
-                {% endfor %}
-            </datalist>
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                    {% translate "Search" %}
-                </button>
-            </div>
-            </div>
+                placeholder="{% trans 'Start typing application name...' %}"
+                type="text"
+        />
+        <datalist id="applications" name="name">
+            {% for application in context %}
+            <option name="z" value="{{ application.name }}">{{ application.name }}</option>
+            {% endfor %}
+        </datalist>
+        <div class="input-group-append">
+            <a class="btn btn-primary" id="search" href="{% url 'front:applications' %}?name=" onclick='searchApplications()'>{% trans "Search" %}</a>
         </div>
-    </form>
+    </div>
+</div>
 {% endblock content %}
+

@@ -7,38 +7,40 @@
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 
 <form method="POST">
-  {% csrf_token %}
+    {% csrf_token %}
     <div class="container">
-      <div class="row d-flex justify-content-center">
-        <div class="card px-5 py-5">
-          <div class="form-data">
-            <div class="forms-inputs mb-4">
-              <span>{% translate "Login" %}</span>
-              <input
-                name="username"
-                class="w-100"
-                type="text"
-              />
+        <div class="row d-flex justify-content-center">
+            <div class="card px-5 py-5">
+                <div class="form-data">
+                    <div class="forms-inputs mb-4">
+                        <span>{% trans "Login" %}</span>
+                        <input
+                                class="w-100"
+                                name="username"
+                                required="required"
+                                type="text"
+                        />
+                    </div>
+                    <div class="forms-inputs mb-4">
+                        <span>{% trans "Password" %}</span>
+                        <input
+                                autoComplete="off"
+                                class="w-100"
+                                name="password"
+                                required="required"
+                                type="password"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <button class="btn btn-success w-100">{% trans "Sign in" %}</button>
+                    </div>
+                    <div class="mb-3">
+                        {% if message %}
+                        <p class="text-danger">{{ message }}</p>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            <div class="forms-inputs mb-4">
-              <span>{% translate "Password" %}</span>
-              <input
-                name="password"
-                class="w-100"
-                autoComplete="off"
-                type="password"
-              />
-            </div>
-            <div class="mb-3">
-              <button class="btn btn-success w-100">{% translate "Login" %}</button>
-            </div>
-            <div class="mb-3">
-              {% if message %}
-                <p class="text-danger">{{ message }}</p>
-              {% endif %}
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </form>
+</form>

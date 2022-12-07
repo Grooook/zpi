@@ -9,12 +9,13 @@
     birth_date: null
     name: admin name
     surname: admin surname
+    department: 2
+    is_student: true
     is_admin: true
     is_active: true
     is_teacher: false
     is_staff: true
     is_dean: false
-    is_super_teacher: false
     is_superuser: true
 - model: api.user
   pk: 2
@@ -27,12 +28,13 @@
     birth_date: null
     name: Hleb
     surname: Liaonik
+    department: 3
+    is_student: true
     is_admin: false
     is_active: true
     is_teacher: false
     is_staff: false
     is_dean: false
-    is_super_teacher: false
     is_superuser: false
 - model: api.user
   pk: 3
@@ -45,10 +47,11 @@
     birth_date: null
     name: p1
     surname: p1
+    department: 4
+    is_student: true
     is_admin: false
     is_active: true
     is_teacher: false
     is_staff: true
     is_dean: false
-    is_super_teacher: false
     is_superuser: true
