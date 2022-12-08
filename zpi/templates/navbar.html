@@ -24,14 +24,14 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         {% if request.session.user.is_staff %}
-                        <a class="nav-link active" aria-current="page" href="{% url 'front:create_application' %}">
+                        <a class="nav-link active" aria-current="page" href="{% url 'front:create_new_application' %}">
                             {% trans "Add application" %}
                         </a>
                         {% endif %}
                         <a class="nav-link active" aria-current="page" href="{% url 'front:applications' %}">
                             {% trans "All applications" %}
                         </a>
-                        <a class="nav-link active" aria-current="page" href="">
+                        <a class="nav-link active" aria-current="page" href="{% url 'front:user_applications' %}">
                             {% trans "My applications" %}
                         </a>
                     </ul>

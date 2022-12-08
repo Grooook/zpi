@@ -45,10 +45,10 @@
     email: pracownik@example.com
     username: p1
     birth_date: null
-    name: p1
-    surname: p1
+    name: Agata
+    surname: Marcinkowska
     department: 4
-    is_student: true
+    is_student: false
     is_admin: false
     is_active: true
     is_teacher: false

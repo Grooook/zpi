@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% load i18n %}
+
+{% block title %}{% trans "Create application" %}{% endblock title %}
+{% block scripts %}
+{% endblock scripts %}
+{% block content %}
+<form enctype="multipart/form-data" method="POST">
+  {% csrf_token %}
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="card px-5 py-5 mt-5 w-50">
+        <div class="form-data">
+          {% bootstrap_form form %}
+          <div class="mb-3 d-flex justify-content-end">
+            <button class="btn btn-primary">{{submit}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock content %}
+

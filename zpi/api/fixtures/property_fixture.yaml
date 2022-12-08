@@ -1,0 +1,60 @@
+- model: api.property
+  pk: 1
+  fields:
+    name: CURRENT_DATE
+    property_type: date
+    max_length: 10
+- model: api.property
+  pk: 2
+  fields:
+    name: JUSTIFICATION
+    property_type: text
+    max_length: 1000
+- model: api.property
+  pk: 3
+  fields:
+    name: WORK_SUPERVISOR
+    property_type: user
+    max_length: 100
+- model: api.property
+  pk: 4
+  fields:
+    name: OPINION
+    property_type: text
+    max_length: 1000
+- model: api.property
+  pk: 5
+  fields:
+    name: STUDENT_NAME_SURNAME
+    property_type: varchar
+    max_length: 1000
+- model: api.property
+  pk: 6
+  fields:
+    name: STUDENT_ID
+    property_type: varchar
+    max_length: 15
+- model: api.property
+  pk: 7
+  fields:
+    name: STUDENT_DIRECTION
+    property_type: varchar
+    max_length: 100
+- model: api.property
+  pk: 8
+  fields:
+    name: STUDENT_SPECIALTY
+    property_type: varchar
+    max_length: 100
+- model: api.property
+  pk: 9
+  fields:
+    name: STUDY_DEGREE
+    property_type: boolean
+    max_length: 1
+- model: api.property
+  pk: 10
+  fields:
+    name: STATIONARY
+    property_type: boolean
+    max_length: 1

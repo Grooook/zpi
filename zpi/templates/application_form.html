@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load django_bootstrap5 %}
 {% load i18n %}
 
 {% block title %}{% trans "Create application" %}{% endblock title %}
@@ -12,23 +13,7 @@
         <div class="row d-flex justify-content-center">
             <div class="card px-5 py-5 mt-5 w-50">
                 <div class="form-data">
-                    <div class="forms-inputs mb-4">
-                        <span>{% trans "Name" %}</span>
-                        <input autocomplete="off" class="form-control" name="name" required="required"
-                               value="{% if method == 'PUT' %}{{application.data.name}}{% endif %}">
-                    </div>
-                    <div class="forms-inputs mb-4">
-                        <span>{% trans "Is active" %}</span>
-                        <input {% if method == 'PUT' and application.data.is_active or method == 'POST' %}checked{% endif %} name="is_active" type="checkbox">
-                    </div>
-                    {% if method != 'PUT' %}
-                    <div class="forms-inputs mb-4">
-                        <span>{% trans "File" %}</span>
-                        <input accept="application/msword" class="form-control" name="file" required="required"
-                               type="file"
-                               >
-                    </div>
-                    {% endif %}
+                    {% bootstrap_form form %}
                     <div class="mb-3 d-flex justify-content-end">
                         <button class="btn btn-primary">{{submit}}</button>
                     </div>

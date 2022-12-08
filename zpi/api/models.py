@@ -1,8 +1,6 @@
-import uuid
-
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.db import models
 from django.core.validators import MaxValueValidator
+from django.db import models
 
 
 class MyAccountManager(BaseUserManager):
@@ -32,7 +30,7 @@ class MyAccountManager(BaseUserManager):
             password=password,
             department=department,
         )
-        user.is_student =True
+        user.is_student = True
         user.is_active = True
         user.is_admin = True
         user.is_staff = True
@@ -81,6 +79,8 @@ class Application(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     expired = models.DateField(blank=True, null=True)
     last_update = models.DateTimeField(auto_now=True)
+    for_student = models.BooleanField(default=False)
+    for_worker = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     file = models.FileField(upload_to='documents/')
 
@@ -104,24 +104,21 @@ class ApplicationDepartment(models.Model):
         return self.application.name
 
 
-
-class FieldType(models.Model):
-    field_types = [
-        ("", "Date"),
-        ("", "DateTime"),
-        ("", "Time"),
-        ("", "Decimal"),
-        ("", "Char"),
-        ("", "Intager"),
-        ("", ""),
-    ]
-    name = models.CharField(max_length=127, choices=field_types)
-
-
 class Property(models.Model):
     name = models.CharField(max_length=127)
     property_type = models.CharField(max_length=127)
     max_length = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return self.name
+
+
+class ApplicationProperty(models.Model):
+    application = models.ForeignKey(Application, on_delete=models.CASCADE)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.application.name
 
 
 class UserApplication(models.Model):
@@ -131,6 +128,10 @@ class UserApplication(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     is_accepted = models.BooleanField(default=False)
+    file = models.FileField(upload_to='documents/processed/', null=True)
+
+    class Meta:
+        unique_together = ('application', 'user',)
 
 
 class UserApplicationProperty(models.Model):

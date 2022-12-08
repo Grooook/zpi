@@ -11,6 +11,10 @@ docker-compose exec web python manage.py compilemessages
 sleep 3
 docker-compose exec web python manage.py loaddata department_fixture
 docker-compose exec web python manage.py loaddata users_fixture
+docker-compose exec web python manage.py loaddata property_fixture
 docker-compose exec web rm -R media/documents
+docker-compose exec web mkdir media/documents media/documents/processed
+docker-compose down
+docker-compose up
 #docker-compose exec web python manage.py shell -c "from api.models import User; User.objects.create_superuser('admin@example.com', 'Admin Admin', 'admin name', 'admin surname', 'admin')"
 #docker-compose exec web python manage.py shell -c "from api.models import User; User.objects.create_user('248795@example.com', 'pwr342784', 'Hleb', 'Liaonik', 'pass')"

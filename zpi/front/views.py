@@ -6,7 +6,8 @@ from django.views import View
 from django.contrib import messages
 
 from .utils import generate_request_headers
-from .forms import ApplicationForm
+from .forms import ApplicationForm, UserApplicationForm
+
 
 def handler404(request, *args, **kwargs):
     return HttpResponseRedirect('/')
@@ -60,14 +61,27 @@ class ApplicationListView(View):
         return render(request, 'applications.html', {'applications': response.json()})
 
 
+class UserApplicationListView(View):
+    def get(self, request):
+        name = request.GET.get('name', None)
+        is_active = request.GET.get('is_active', None)
+        get_data = {
+            'name': name,
+            'is_active': is_active,
+        }
+        response = requests.get('http://localhost:8000/api/user_applications/', data=get_data,
+                                headers=generate_request_headers(request))
+
+        return render(request, 'user_applications.html', {'applications': response.json()})
+
 class ApplicationCreateView(View):
     def get(self, request):
         response = requests.get('http://localhost:8000/api/get_departments/',
                                  headers=generate_request_headers(request))
         form = ApplicationForm(departments=response.json())
-        context = {'method': 'POST', 'submit': 'Add application', 'form': form}
+        context = {'submit': 'Add application', 'form': form}
 
-        return render(request, 'application_form_1.html', context)
+        return render(request, 'application_form.html', context)
 
     def post(self, request):
         response = requests.post('http://localhost:8000/api/applications/', data=dict(request.POST), files=request.FILES,
@@ -76,7 +90,27 @@ class ApplicationCreateView(View):
             return redirect('front:applications')
         messages.error(request, response.json())
 
-        return redirect('front:create_application')
+        return redirect('front:create_new_application')
+
+
+class UserApplicationCreateView(View):
+    def get(self, request, id):
+        response = requests.get(f'http://localhost:8000/api/application/{id}/properties/',
+                                headers=generate_request_headers(request))
+
+        form = UserApplicationForm()
+        context = {'submit': 'Add application', 'form': form}
+
+        return render(request, 'user_application_form.html', context)
+
+    def post(self, request, id):
+        response = requests.post(f'http://localhost:8000/api/user/application/{id}/', data=dict(request.POST), files=request.FILES,
+                                 headers=generate_request_headers(request))
+        if response.status_code == 200:
+            return redirect('front:user_applications')
+        messages.error(request, response.json())
+
+        return redirect('front:create_user_application', id=id)
 
 
 class ApplicationUpdateView(View):
@@ -90,21 +124,11 @@ class ApplicationUpdateView(View):
         context['application'] = response.json()
         response = requests.get('http://localhost:8000/api/get_departments/',
                                 headers=generate_request_headers(request))
-        initial_dict = {
-            "name" : "My New Title",
-            "description" : " A New Description",
-            "available":True,
-            "email":"abc@gmail.com"
-        }
         context['form'] = ApplicationForm(departments=response.json(), initial=context['application']['data'])
 
-        return render(request, 'application_form_1.html', context)
+        return render(request, 'application_form.html', context)
 
     def post(self, request, *args, **kwargs):
-        # post_data = {
-        #     'name': request.POST['name'],
-        #     'is_active': True if 'is_active' in request.POST else False,
-        # }
         response = requests.patch(f'http://localhost:8000/api/application/{self.kwargs["id"]}/', data=dict(request.POST),
                                  headers=generate_request_headers(request))
         if response.status_code == 200:
