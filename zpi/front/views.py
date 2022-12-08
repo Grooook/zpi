@@ -14,7 +14,8 @@ def handler404(request, *args, **kwargs):
 
 
 def main_page(request):
-    response = requests.get('http://localhost:8000/api/get_applications/', headers=generate_request_headers(request)).json()
+    response = requests.get('http://localhost:8000/api/get_applications/',
+                            headers=generate_request_headers(request)).json()
     return render(request, 'main.html', {'context': response})
 
 
@@ -52,13 +53,17 @@ class ApplicationListView(View):
     def get(self, request):
         name = request.GET.get('name', None)
         is_active = request.GET.get('is_active', None)
+        department = request.GET.get('department', None)
         get_data = {
             'name': name,
             'is_active': is_active,
+            'department': department,
         }
-        response = requests.get('http://localhost:8000/api/applications/', data=get_data,
-                                headers=generate_request_headers(request))
-        return render(request, 'applications.html', {'applications': response.json()})
+        applications = requests.get('http://localhost:8000/api/applications/', data=get_data,
+                                    headers=generate_request_headers(request))
+        departments = requests.get('http://localhost:8000/api/get_departments/',
+                                   headers=generate_request_headers(request))
+        return render(request, 'applications.html', {'applications': applications.json(), 'departments': departments.json()})
 
 
 class UserApplicationListView(View):
@@ -74,10 +79,11 @@ class UserApplicationListView(View):
 
         return render(request, 'user_applications.html', {'applications': response.json()})
 
+
 class ApplicationCreateView(View):
     def get(self, request):
         response = requests.get('http://localhost:8000/api/get_departments/',
-                                 headers=generate_request_headers(request))
+                                headers=generate_request_headers(request))
         form = ApplicationForm(departments=response.json())
         context = {'submit': 'Add application', 'form': form}
 
@@ -117,20 +123,21 @@ class ApplicationUpdateView(View):
     def get(self, request, *args, **kwargs):
         context = {'method': 'PUT', 'submit': 'Update application'}
         response = requests.get(f'http://localhost:8000/api/application/{self.kwargs["id"]}/',
-                                 headers=generate_request_headers(request))
+                                headers=generate_request_headers(request))
 
         if response.status_code == 404:
             return redirect('front:applications')
         context['application'] = response.json()
         response = requests.get('http://localhost:8000/api/get_departments/',
                                 headers=generate_request_headers(request))
-        context['form'] = ApplicationForm(departments=response.json(), initial=context['application']['data'])
+        context['form'] = ApplicationForm(
+            departments=response.json(), initial=context['application']['data'])
 
         return render(request, 'application_form.html', context)
 
     def post(self, request, *args, **kwargs):
         response = requests.patch(f'http://localhost:8000/api/application/{self.kwargs["id"]}/', data=dict(request.POST),
-                                 headers=generate_request_headers(request))
+                                  headers=generate_request_headers(request))
         if response.status_code == 200:
             return redirect('front:applications')
         messages.error(request, response.json())
@@ -141,6 +148,6 @@ class ApplicationUpdateView(View):
 class ApplicationDeleteView(View):
     def get(self, request, *args, **kwargs):
         response = requests.delete(f'http://localhost:8000/api/application/{self.kwargs["id"]}/',
-                                 headers=generate_request_headers(request))
+                                   headers=generate_request_headers(request))
 
         return redirect('front:applications')

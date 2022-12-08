@@ -49,7 +49,8 @@ class User(AbstractBaseUser):
     user_id = models.PositiveIntegerField(unique=True, blank=True, null=True)
     email = models.EmailField(verbose_name="email", max_length=60, unique=True)
     username = models.CharField(max_length=30)
-    birth_date = models.CharField(max_length=30, blank=True, null=True, default=None)
+    birth_date = models.CharField(
+        max_length=30, blank=True, null=True, default=None)
     name = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
     department = models.ForeignKey('Department', on_delete=models.CASCADE)
@@ -135,14 +136,16 @@ class UserApplication(models.Model):
 
 
 class UserApplicationProperty(models.Model):
-    user_application = models.ForeignKey(UserApplication, on_delete=models.CASCADE)
+    user_application = models.ForeignKey(
+        UserApplication, on_delete=models.CASCADE)
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
     position = models.PositiveSmallIntegerField()
     value = models.TextField(max_length=1024)
     url = models.URLField(blank=True, null=True)
     editable = models.BooleanField(default=False)
     font = models.CharField(max_length=125, default="Arial")
-    font_size = models.PositiveSmallIntegerField(default=12, validators=[MaxValueValidator(72)])
+    font_size = models.PositiveSmallIntegerField(
+        default=12, validators=[MaxValueValidator(72)])
     is_bold = models.BooleanField(default=False)
     is_italic = models.BooleanField(default=False)
     is_underline = models.BooleanField(default=False)

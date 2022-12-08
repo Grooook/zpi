@@ -29,9 +29,12 @@ class ClassicApplicationSerializer(serializers.ModelSerializer):
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    departments = serializers.SerializerMethodField(method_name='get_departments')
-    is_users_application = serializers.SerializerMethodField(method_name='is_application_created_by_user')
-    obligatory = serializers.SerializerMethodField(method_name='get_obligatory')
+    departments = serializers.SerializerMethodField(
+        method_name='get_departments')
+    is_users_application = serializers.SerializerMethodField(
+        method_name='is_application_created_by_user')
+    obligatory = serializers.SerializerMethodField(
+        method_name='get_obligatory')
 
     class Meta:
         model = Application
@@ -39,7 +42,8 @@ class ApplicationSerializer(serializers.ModelSerializer):
         extra_fields = ('is_users_application', 'departments', 'obligatory')
 
     def get_departments(self, instance):
-        departments = ApplicationDepartment.objects.filter(application=instance.pk).values('department')
+        departments = ApplicationDepartment.objects.filter(
+            application=instance.pk).values('department')
 
         return [department['department'] for department in departments]
 
@@ -72,8 +76,10 @@ class ShortApplicationSerializer(serializers.ModelSerializer):
 
 
 class UserApplicationSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField(method_name='get_application_name')
+    name = serializers.SerializerMethodField(
+        method_name='get_application_name')
     color = serializers.SerializerMethodField(method_name='get_color')
+
     class Meta:
         model = UserApplication
         fields = '__all__'
@@ -91,6 +97,7 @@ class UserApplicationSerializer(serializers.ModelSerializer):
             return 'danger'
 
         return 'success'
+
 
 class UserApplicationPropertySerializer(serializers.ModelSerializer):
     class Meta:

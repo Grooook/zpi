@@ -1,54 +1,53 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
-
-{% block title %}{% trans "Aapplications" %}{% endblock title %}
+{% block title %}
+    {% trans "Aapplications" %}
+{% endblock title %}
 {% block scripts %}
 {% endblock scripts %}
 {% block content %}
-<div class="d-flex justify-content-center my-5">
-    <div class="w-50">
-        {% if applications %}
-        <form class="d-flex justify-content-between">
-            <div class="d-flex">
-            <div class="forms-inputs">
-                <input
-                        class="form-control"
-                        id="search"
-                        name="name"
-                        placeholder="{% trans 'Start typing application name...' %}"
-                        {% if request.GET.name %} value="{{request.GET.name}}" {% endif %}
-                />
-            </div>
-            </div>
-            <div>
-                <button class="btn btn-primary" type="submit">{% trans "Apply" %}</button>
-            </div>
-        </form>
-
-        {% for application in applications %}
-        <div class="card my-2 bg-{{application.color}}">
-            <div class="row  justify-content-between m-2">
-                <div class="col">
-                    <h5 class="card-title text-white">{{application.name}}</h5>
+    <div class="d-flex justify-content-center my-5">
+        <div class="w-50">
+            {% if applications %}
+                <form class="d-flex justify-content-between">
+                    <div class="d-flex">
+                        <div class="forms-inputs">
+                            <input class="form-control"
+                                   id="search"
+                                   name="name"
+                                   placeholder="{% trans 'Start typing application name...' %}"
+                                   {% if request.GET.name %} value="{{ request.GET.name }}"{% endif %}/>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" type="submit">{% trans "Apply" %}</button>
+                    </div>
+                </form>
+                {% for application in applications %}
+                    <div class="card my-2 bg-{{ application.color }}">
+                        <div class="row  justify-content-between m-2">
+                            <div class="col">
+                                <h5 class="card-title text-white">{{ application.name }}</h5>
+                            </div>
+                            <div class="col-auto">
+                                <a class="card-link text-white" href="{{ application.file }}">{% trans "Download file" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% elif request.session.is_authenticated and request.session.user.is_staff %}
+                <div class="d-flex justify-content-center">
+                    <div>
+                        <h4>{% trans "No applications" %}</h4>
+                        <a aria-current="page"
+                           class="btn btn-primary w-100"
+                           href="{% url 'front:applications' %}">
+                            {% trans "Add application" %}
+                        </a>
+                    </div>
                 </div>
-                <div class="col-auto">
-                    <a class="card-link text-white" href="{{application.file}}">{% trans "Download file" %}</a>
-                </div>
-            </div>
+            {% endif %}
         </div>
-        {% endfor %}
-        {% elif request.session.is_authenticated and request.session.user.is_staff %}
-        <div class="d-flex justify-content-center">
-            <div>
-                <h4>{% trans "No applications" %}</h4>
-                <a aria-current="page" class="btn btn-primary w-100" href="{% url 'front:applications' %}">
-                    {% trans "Add application" %}
-                </a>
-            </div>
-        </div>
-        {% endif %}
     </div>
-</div>
 {% endblock content %}
-

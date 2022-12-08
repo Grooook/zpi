@@ -1,70 +1,86 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
-
-{% block title %}{% trans "Aapplications" %}{% endblock title %}
+{% block title %}
+    {% trans "Aapplications" %}
+{% endblock title %}
 {% block scripts %}
 {% endblock scripts %}
 {% block content %}
-<div class="d-flex justify-content-center my-5">
-    <div class="w-50">
-        {% if applications %}
-        <form class="d-flex justify-content-between">
-            <div class="d-flex">
-            <div class="forms-inputs">
-                <input
-                        class="form-control"
-                        id="search"
-                        name="name"
-                        placeholder="{% trans 'Start typing application name...' %}"
-                        {% if request.GET.name %} value="{{request.GET.name}}" {% endif %}
-                />
-            </div>
-            <div class="forms-check ms-4 mt-1">
-                <label class="form-check-label" for="is_active">{% trans "Is active" %}</label>
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="is_active"
-                        name="is_active"
-                        {% if request.GET.is_active == "1" %} value="0" checked {% else %}  value="1" {% endif %}/>
-            </div>
-            </div>
-            <div>
-                <button class="btn btn-primary" type="submit">{% trans "Apply" %}</button>
-            </div>
-        </form>
-
-        {% for application in applications %}
-        <div class="card my-2">
-            <div class="row  justify-content-between m-2">
-                <div class="col">
-                    <h5 class="card-title">{{application.name}}</h5>
-                </div>
-                <div class="col-auto">
-                    <a class="card-link" href="{{application.file}}">{% trans "Download file" %}</a>
-                    {% if application.is_active %}
-                        <a class="card-link" href="{% url 'front:create_user_application' id=application.id %}">{% trans "Create" %}</a>
-                    {% endif %}
-                    {% if request.session.user.is_staff %}
-                    <a class="card-link" href="{% url 'front:update_application' id=application.id %}">{% trans "Update" %}</a>
-                    <a class="card-link" href="{% url 'front:delete_application' id=application.id %}">{% trans "Delete" %}</a>
+    <div class="d-flex justify-content-center my-5">
+        <div class="w-50">
+            {% if applications %}
+                <form class="d-flex justify-content-between">
+                    <div class="d-flex">
+                        <div class="forms-inputs">
+                            <input class="form-control"
+                                   id="search"
+                                   name="name"
+                                   placeholder="{% trans 'Start typing application name...' %}"
+                                   {% if request.GET.name %} value="{{ request.GET.name }}"{% endif %}/>
+                        </div>
+                        {% if request.session.is_authenticated and request.session.user.is_staff %}
+                            <div class="forms-inputs ms-4">
+                                <input class="form-control"
+                                       list="department"
+                                       placeholder="{% trans 'Start typing department name...' %}"
+                                       name="department"/>
+                            <datalist id="department">
+                                {% for department in departments %}
+                                    <option value="{{ department.short_name }}">
+                                        {{ department.name }}
+                                    </option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                        <div class="forms-check ms-4 mt-1">
+                            <label class="form-check-label" for="is_active">{% trans "Is active" %}</label>
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="is_active"
+                                   name="is_active"
+                                   {% if request.GET.is_active == "1" %} value="0" checked {% else %}  value="1" {% endif %}/>
+                        </div>
                     {% endif %}
                 </div>
-            </div>
-        </div>
-        {% endfor %}
+                <div>
+                    <button class="btn btn-primary" type="submit">{% trans "Apply" %}</button>
+                </div>
+            </form>
+            {% for application in applications %}
+                <div class="card my-2">
+                    <div class="row  justify-content-between m-2">
+                        <div class="col">
+                            <h5 class="card-title">{{ application.name }}</h5>
+                        </div>
+                        <div class="col-auto">
+                            <a class="card-link" href="{{ application.file }}">{% trans "Download file" %}</a>
+                            {% if application.is_active %}
+                                <a class="card-link"
+                                   href="{% url 'front:create_user_application' id=application.id %}">{% trans "Create" %}</a>
+                            {% endif %}
+                            {% if request.session.user.is_staff %}
+                                <a class="card-link"
+                                   href="{% url 'front:update_application' id=application.id %}">{% trans "Update" %}</a>
+                                <a class="card-link"
+                                   href="{% url 'front:delete_application' id=application.id %}">{% trans "Delete" %}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         {% elif request.session.is_authenticated and request.session.user.is_staff %}
-        <div class="d-flex justify-content-center">
-            <div>
-                <h4>{% trans "No applications" %}</h4>
-                <a aria-current="page" class="btn btn-primary w-100" href="{% url 'front:create_new_application' %}">
-                    {% trans "Add new" %}
-                </a>
+            <div class="d-flex justify-content-center">
+                <div>
+                    <h4>{% trans "No applications" %}</h4>
+                    <a aria-current="page"
+                       class="btn btn-primary w-100"
+                       href="{% url 'front:create_new_application' %}">
+                        {% trans "Add new" %}
+                    </a>
+                </div>
             </div>
-        </div>
         {% endif %}
     </div>
 </div>
 {% endblock content %}
-

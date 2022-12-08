@@ -1,12 +1,15 @@
 {% load static %}
 {% load i18n %}
 {% load front_tags %}
-
 {% for message in messages %}
-<div class="container-fluid p-0">
-    <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message.message|message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="container-fluid p-0">
+        <div class="alert {{ message.tags }} alert-dismissible fade show"
+             role="alert">
+            {{ message.message|message }}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
     </div>
-</div>
 {% endfor %}

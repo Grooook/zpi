@@ -1,78 +1,77 @@
 {% load static %}
 {% load i18n %}
-
 {% block scripts %}
-<link href="{% static 'css/flag.css' %}" rel="stylesheet">
+    <link href="{% static 'css/flag.css' %}" rel="stylesheet">
 {% endblock scripts %}
-
 <nav class="navbar navbar-light bg-light">
     <div class="d-flex justify-content-between mx-5 w-100">
         <div>
-            <a class="navbar-brand" href="/">
-                SZW
-            </a>
+            <a class="navbar-brand" href="/">SZW</a>
         </div>
         <div class="d-flex">
             {% if request.session.is_authenticated %}
-            <div class="dropdown">
-                <div class="d-flex">
-
-                    <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        {{request.session.user.name}} {{request.session.user.surname}}
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        {% if request.session.user.is_staff %}
-                        <a class="nav-link active" aria-current="page" href="{% url 'front:create_new_application' %}">
-                            {% trans "Add application" %}
+                <div class="dropdown">
+                    <div class="d-flex">
+                        <a class="btn dropdown-toggle"
+                           href="#"
+                           role="button"
+                           id="dropdownMenuLink"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            {{ request.session.user.name }} {{ request.session.user.surname }}
                         </a>
-                        {% endif %}
-                        <a class="nav-link active" aria-current="page" href="{% url 'front:applications' %}">
-                            {% trans "All applications" %}
-                        </a>
-                        <a class="nav-link active" aria-current="page" href="{% url 'front:user_applications' %}">
-                            {% trans "My applications" %}
-                        </a>
-                    </ul>
-                    <a
-                            href="{% url 'front:logout' %}"
-                            class="nav-link active"
-                            aria-current="page"
-                    >
-                        {% trans "Logout" %}
-                    </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            {% if request.session.user.is_staff %}
+                                <a class="nav-link active"
+                                   aria-current="page"
+                                   href="{% url 'front:create_new_application' %}">
+                                    {% trans "Add application" %}
+                                </a>
+                            {% endif %}
+                            <a class="nav-link active"
+                               aria-current="page"
+                               href="{% url 'front:applications' %}">{% trans "All applications" %}</a>
+                            <a class="nav-link active"
+                               aria-current="page"
+                               href="{% url 'front:user_applications' %}">
+                                {% trans "My applications" %}
+                            </a>
+                        </ul>
+                        <a href="{% url 'front:logout' %}"
+                           class="nav-link active"
+                           aria-current="page">{% trans "Logout" %}</a>
+                    </div>
                 </div>
-
-            </div>
             {% else %}
-            <div>
-                <a
-                        class="nav-link active"
-                        aria-current="page"
-                        href="{% url 'front:login' %}"
-                >
-                    {% trans "Sign in" %}
-                </a>
-            </div>
+                <div>
+                    <a class="nav-link active"
+                       aria-current="page"
+                       href="{% url 'front:login' %}">{% trans "Sign in" %}</a>
+                </div>
             {% endif %}
-            <form action="{% url 'front:set_language' %}" method="post">{% csrf_token %}
+            <form action="{% url 'front:set_language' %}" method="post">
+                {% csrf_token %}
                 <input name="next" type="hidden" value="{{ redirect_to }}">
                 {% get_current_language as LANGUAGE_CODE %}
                 {% get_available_languages as LANGUAGES %}
                 {% get_language_info_list for LANGUAGES as languages %}
                 {% for language in languages %}
-                {% if language.code != LANGUAGE_CODE %}
-                <input name="language" type="hidden" value="{{ language.code }}">
-                {% if language.code == "pl" %}
-                <input type="image" class="flag" src="{% static 'img/en_flag.svg' %}" alt="Submit"/>
-                {% else %}
-                <input type="image" class="flag" src="{% static 'img/pl_flag.svg' %}" alt="Submit"/>
-                {% endif %}
-                {% endif %}
+                    {% if language.code != LANGUAGE_CODE %}
+                        <input name="language" type="hidden" value="{{ language.code }}">
+                        {% if language.code == "pl" %}
+                            <input type="image"
+                                   class="flag"
+                                   src="{% static 'img/en_flag.svg' %}"
+                                   alt="Submit"/>
+                        {% else %}
+                            <input type="image"
+                                   class="flag"
+                                   src="{% static 'img/pl_flag.svg' %}"
+                                   alt="Submit"/>
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
             </form>
         </div>
     </div>
-
 </nav>

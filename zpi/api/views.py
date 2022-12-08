@@ -74,10 +74,12 @@ class UserApplicationsListListView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        user_applications = UserApplication.objects.filter(user=user).order_by('-submission_date')
+        user_applications = UserApplication.objects.filter(
+            user=user).order_by('-submission_date')
         name = self.request.data.get('name', None)
         if name:
-            user_applications = user_applications.filter(application__name__contains=name)
+            user_applications = user_applications.filter(
+                application__name__contains=name)
 
         return user_applications
 
@@ -89,18 +91,27 @@ class ApplicationListView(ListCreateAPIView):
     def get_queryset(self):
         applications = Application.objects.all().order_by('name')
         user = self.request.user
+
         name = self.request.data.get('name', None)
         is_active = self.request.data.get('is_active', None)
+        department = self.request.data.get('department', None)
         if name:
             applications = applications.filter(name__contains=name)
         if user.is_student:
-            applications = applications.filter(is_active=1)
+            application_ids = ApplicationDepartment.objects.filter(
+                department=user.department).values_list('application')
+            applications = applications.filter(
+                is_active=1, for_student=1, pk__in=application_ids)
         elif is_active:
             applications = applications.filter(is_active=is_active)
+        if user.is_staff and department:
+            department = Department.objects.get(short_name=department)
+            application_ids = ApplicationDepartment.objects.filter(
+                department=department.pk).values_list('application')
+            applications = applications.filter(pk__in=application_ids)
         return applications
 
     def create(self, request, *args, **kwargs):
-        request_data = dict(request.POST)
         user = request.user
         file = request.FILES['file']
         post_data = get_application_post_data(request, user.pk, file)
@@ -108,7 +119,8 @@ class ApplicationListView(ListCreateAPIView):
         serializer = ApplicationSerializer(data=post_data)
         if serializer.is_valid():
             serializer.save()
-            create_application_department(serializer.data['id'], dict(request.POST)['departments'])
+            create_application_department(
+                serializer.data['id'], dict(request.POST)['departments'])
             a = Application.objects.get(pk=serializer.data['id'])
             d = DocFormatter(a)
             d.save_to_db()
@@ -130,7 +142,8 @@ class UserApplicationCreateView(CreateAPIView):
         serializer = UserApplicationSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            create_user_application_property(serializer.data['id'], dict(request.POST))
+            create_user_application_property(
+                serializer.data['id'], dict(request.POST))
             a = Application.objects.get(pk=serializer.data['application'])
             d = DocFormatter(a)
             d.save_new_document(serializer.data['id'], dict(request.POST))
@@ -155,7 +168,8 @@ class ApplicationView(APIView):
         post_data = get_application_post_data(request)
 
         application = self.get_object(id)
-        serializer = ApplicationSerializer(application, data=post_data, partial=True)
+        serializer = ApplicationSerializer(
+            application, data=post_data, partial=True)
         if serializer.is_valid():
             serializer.save()
             ApplicationDepartment.objects.filter(application=id).delete()
