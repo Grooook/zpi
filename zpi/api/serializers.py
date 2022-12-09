@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .models import User, Application, Department, ApplicationDepartment, ApplicationProperty, UserApplication, \
-    UserApplicationProperty
+    UserApplicationProperty, Property
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -78,28 +78,39 @@ class ShortApplicationSerializer(serializers.ModelSerializer):
 class UserApplicationSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(
         method_name='get_application_name')
-    color = serializers.SerializerMethodField(method_name='get_color')
+    color = serializers.SerializerMethodField(method_name='get_colored_status')
 
     class Meta:
         model = UserApplication
         fields = '__all__'
-        extra_fields = ('name', 'color', )
+        extra_fields = ('name', 'colored_status', )
 
     def get_application_name(self, instance):
         application = Application.objects.get(pk=instance.application.pk)
 
         return application.name
 
-    def get_color(self, instance):
-        if instance.is_active and not instance.is_accepted:
+    def get_colored_status(self, instance):
+        if instance.status == 'c':
+            return 'secondary'
+        elif instance.status == 'p':
             return 'info'
-        elif not instance.is_active and not instance.is_accepted:
+        elif instance.status == 'a':
+            return 'success'
+        elif instance.status == 'r':
+            return 'warning'
+        else:
             return 'danger'
 
-        return 'success'
 
 
 class UserApplicationPropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = UserApplicationProperty
+        fields = '__all__'
+
+
+class PropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Property
         fields = '__all__'

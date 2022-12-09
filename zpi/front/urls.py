@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path, include
 
 from .views import main_page, login, logout, ApplicationListView, ApplicationCreateView, ApplicationUpdateView, \
-    ApplicationDeleteView, UserApplicationCreateView, UserApplicationListView
+    ApplicationDeleteView, UserApplicationCreateView, UserApplicationListView, UserApplicationDeleteView
 
 app_name = 'front'
 
@@ -26,5 +26,7 @@ urlpatterns = [
 
     path('user_applications/', UserApplicationListView.as_view(),
          name='user_applications'),
+    path('delete_user_application/<int:id>/',
+        UserApplicationDeleteView.as_view(), name='delete_user_application'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 handler404 = 'front.views.handler404'

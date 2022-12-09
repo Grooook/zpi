@@ -24,7 +24,8 @@
                                 <input class="form-control"
                                        list="department"
                                        placeholder="{% trans 'Start typing department name...' %}"
-                                       name="department"/>
+                                       name="department"
+                                       {% if request.GET.department %} value="{{ request.GET.department }}"{% endif %}/>
                             <datalist id="department">
                                 {% for department in departments %}
                                     <option value="{{ department.short_name }}">

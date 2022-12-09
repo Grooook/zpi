@@ -33,6 +33,9 @@
                             <div class="col-auto">
                                 <a class="card-link text-white" href="{{ application.file }}">{% trans "Download file" %}</a>
                             </div>
+                            <div class="col-auto">
+                                <a class="card-link text-white" href="{% url 'front:delete_user_application' id=application.id %}">{% trans "Delete" %}</a>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}

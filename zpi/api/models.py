@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import MaxValueValidator
 from django.db import models
+from rest_framework.exceptions import ValidationError
 
 
 class MyAccountManager(BaseUserManager):
@@ -75,14 +76,21 @@ class User(AbstractBaseUser):
 
 
 class Application(models.Model):
+    choices = (
+        ('s', 'Staff'),
+        ('t', 'Teacher'),
+        ('vd', 'Vice-dean'),
+        ('d', 'Dean'),
+    )
     name = models.CharField(max_length=127, unique=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     expired = models.DateField(blank=True, null=True)
     last_update = models.DateTimeField(auto_now=True)
-    for_student = models.BooleanField(default=False)
+    for_student = models.BooleanField(default=True)
     for_worker = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    accepted_by = models.CharField(max_length=2, default='d', choices=choices)
     file = models.FileField(upload_to='documents/')
 
     def __str__(self):
@@ -123,16 +131,32 @@ class ApplicationProperty(models.Model):
 
 
 class UserApplication(models.Model):
+    choices = (
+        ('c', "Created"),
+        ('p', "Pending"),
+        ('a', "Accepted"),
+        ('r', "Rejected"),
+        ('d', "Deleted"),
+    )
     application = models.ForeignKey(Application, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
-    is_accepted = models.BooleanField(default=False)
+    status = models.CharField(max_length=10, choices=choices, default='c')
     file = models.FileField(upload_to='documents/processed/', null=True)
 
-    class Meta:
-        unique_together = ('application', 'user',)
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            user_applications = UserApplication.objects.filter(application=self.application, user=self.user)
+            for user_application in user_applications:
+                if user_application.status not in ['a', 'r', 'd']:
+                    raise ValidationError("User application already exists")
+        super(UserApplication, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self.status != 'c':
+            raise ValidationError("You can't delete user application")
+        super(UserApplication, self).delete(*args, **kwargs)
 
 
 class UserApplicationProperty(models.Model):
@@ -140,7 +164,7 @@ class UserApplicationProperty(models.Model):
         UserApplication, on_delete=models.CASCADE)
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
     position = models.PositiveSmallIntegerField()
-    value = models.TextField(max_length=1024)
+    value = models.TextField(max_length=1024, blank=True, null=True)
     url = models.URLField(blank=True, null=True)
     editable = models.BooleanField(default=False)
     font = models.CharField(max_length=125, default="Arial")

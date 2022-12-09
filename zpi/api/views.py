@@ -9,9 +9,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import User, Application, Department, ApplicationDepartment, UserApplication
+from .models import User, Application, Department, ApplicationDepartment, UserApplication, ApplicationProperty, Property
 from .serializers import UserSerializer, ApplicationSerializer, ShortApplicationSerializer, DepartmentSerializer, \
-    ApplicationPropertySerializer, UserApplicationSerializer, ClassicApplicationSerializer
+    ApplicationPropertySerializer, UserApplicationSerializer, ClassicApplicationSerializer, PropertySerializer
 from .utils.utils import create_application_department, create_user_application_property, get_application_post_data
 from .utils.docFormatter import DocFormatter
 
@@ -68,7 +68,7 @@ class DepartmentListView(ListAPIView):
         return Department.objects.all().order_by('name')
 
 
-class UserApplicationsListListView(ListAPIView):
+class UserApplicationsListView(ListAPIView):
     serializer_class = UserApplicationSerializer
     permission_classes = [IsAuthenticated]
 
@@ -130,30 +130,8 @@ class ApplicationListView(ListCreateAPIView):
             return Response({"message": serializer.errors}, status=400)
 
 
-class UserApplicationCreateView(CreateAPIView):
-    serializer_class = ApplicationSerializer
-    permission_classes = [IsAuthenticated]
-
-    def create(self, request, *args, **kwargs):
-        data = {
-            "user": request.user.pk,
-            "application": self.kwargs["id"]
-        }
-        serializer = UserApplicationSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            create_user_application_property(
-                serializer.data['id'], dict(request.POST))
-            a = Application.objects.get(pk=serializer.data['application'])
-            d = DocFormatter(a)
-            d.save_new_document(serializer.data['id'], dict(request.POST))
-
-            return Response({"data": serializer.data}, status=200)
-        else:
-            return Response({"message": serializer.errors}, status=400)
-
-
 class ApplicationView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
         return Application.objects.get(pk=pk)
@@ -183,13 +161,63 @@ class ApplicationView(APIView):
         return Response({"message": 'Successful delete'}, status=200)
 
 
+class UserApplicationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        return UserApplication.objects.get(pk=pk)
+
+    def get(self, request, id):
+        application = self.get_object(id)
+        serializer = ApplicationSerializer(application)
+
+        return Response({"data": serializer.data}, status=200)
+
+    def post(self, request, id):
+        data = {
+            "user": request.user.pk,
+            "application": id
+        }
+        serializer = UserApplicationSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            create_user_application_property(
+                serializer.data['id'], dict(request.POST))
+            application = Application.objects.get(pk=serializer.data['application'])
+            document = DocFormatter(application)
+            document.save_new_document(serializer.data['id'], dict(request.POST))
+            return Response({"data": serializer.data}, status=200)
+        else:
+            return Response({"message": serializer.errors}, status=400)
+
+
+    #
+    # def patch(self, request, id):
+    #     request_data = dict(request.POST)
+    #     post_data = get_application_post_data(request)
+    #
+    #     application = self.get_object(id)
+    #     serializer = ApplicationSerializer(
+    #         application, data=post_data, partial=True)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         ApplicationDepartment.objects.filter(application=id).delete()
+    #         create_application_department(id, request_data['departments'])
+    #         return Response(data=serializer.data)
+    #     return Response({'message': "Wrong parameters"}, status=400)
+    #
+    def delete(self, request, id):
+        user_application = self.get_object(id)
+        user_application.delete()
+        return Response({"message": 'Successful delete'}, status=200)
+
+
 class ApplicationPropertyListView(ListAPIView):
-    serializer_class = ApplicationPropertySerializer
+    serializer_class = PropertySerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        id = self.request.data.get('id', None)
-        application = Application.objects.get(pk=id)
-        applications = Application.objects.filter(application=application)
-
-        return applications
+        id = self.kwargs['id']
+        application_properties = ApplicationProperty.objects.filter(application__id=id).values_list('property', flat=True)
+        properties = Property.objects.filter(pk__in=list(application_properties))
+        return properties

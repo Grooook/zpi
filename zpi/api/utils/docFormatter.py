@@ -45,7 +45,8 @@ class DocFormatter:
         context = {key: context[key][0] for key in context.keys()}
         document = DocxTemplate(self.file_path)
         document.render(context=context)
-        document.save("media/documents/processed/test_special_char_in_field_tpl_new.docx")
+        new_path = "documents/processed/" + self.application.file.name.split('/')[-1]
+        document.save("media/" + new_path)
         user_application = UserApplication.objects.get(pk=user_application)
-        user_application.file = 'documents/processed/test_special_char_in_field_tpl_new.docx'
+        user_application.file = new_path
         user_application.save()
