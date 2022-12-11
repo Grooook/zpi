@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework import routers
 
-from .views import user_login, user_logout, change_password, ShortApplicationListView, \
+from .views import user_login, user_logout, change_password, download_file, ShortApplicationListView, \
     ApplicationListView, ApplicationView, DepartmentListView, ApplicationPropertyListView, \
     UserApplicationView, UserApplicationsListView
 
@@ -17,6 +17,7 @@ urlpatterns = [
 
     path('login/', user_login, name='login'),
     path('logout/', user_logout, name='logout'),
+    path('file/download/', download_file, name='download_file'),
     path('change_password/', change_password, name='change_password'),
 
     path('basic/applications/', ShortApplicationListView.as_view(),

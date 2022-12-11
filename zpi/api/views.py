@@ -1,6 +1,8 @@
+import os
+
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
-from django.shortcuts import redirect
+from django.http.response import HttpResponse
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
@@ -52,6 +54,26 @@ def change_password(request):
     user.set_password(password)
     user.save()
     return Response('User passsword has changed')
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def download_file(request):
+    file = request.GET.get('file', None)
+    file = file.replace('http://localhost:8000/', '')
+    if os.path.exists(file):
+        with open(file, 'rb') as document:
+            content = document.read()
+            response = HttpResponse(
+                content,
+                content_type='application/msword'
+            )
+            file_name = file.split('/')[-1]
+            response['Content-Disposition'] = f'attachment; filename={file_name}'
+            response['Content-Length'] = len(content)
+            return response
+    else:
+        return Response('File not found', status=404)
 
 
 class ShortApplicationListView(ListAPIView):
