@@ -153,29 +153,26 @@ class ApplicationDeleteView(View):
 
 
 class UserApplicationUpdateView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request, id):
         context = {'method': 'PUT', 'submit': 'Update application'}
-        response = requests.get(f'http://localhost:8000/api/application/{self.kwargs["id"]}/',
+        response = requests.get(f'http://localhost:8000/api/user/application/{id}/properties/',
                                 headers=generate_request_headers(request))
 
         if response.status_code == 404:
-            return redirect('front:applications')
-        context['application'] = response.json()
-        response = requests.get('http://localhost:8000/api/basic/departments/',
-                                headers=generate_request_headers(request))
-        context['form'] = ApplicationForm(
-            departments=response.json(), initial=context['application']['data'])
+            return redirect('front:user_applications')
+        context['application'] = {property['name']: property['value'] for property in response.json()}
+        context['form'] = UserApplicationForm(initial=context['application'])
 
-        return render(request, 'application_form.html', context)
+        return render(request, 'user_application_form.html', context)
 
-    def post(self, request, *args, **kwargs):
-        response = requests.patch(f'http://localhost:8000/api/application/{self.kwargs["id"]}/', data=dict(request.POST),
+    def post(self, request, id):
+        response = requests.patch(f'http://localhost:8000/api/user/application/{id}/', data=dict(request.POST),
                                   headers=generate_request_headers(request))
         if response.status_code == 200:
-            return redirect('front:applications')
+            return redirect('front:user_applications')
         messages.error(request, response.json())
 
-        return redirect('front:update_application', id=self.kwargs["id"])
+        return redirect('front:update_user_application', id=id)
 
 
 class UserApplicationDeleteView(View):

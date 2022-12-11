@@ -117,6 +117,7 @@ class Property(models.Model):
     name = models.CharField(max_length=127)
     property_type = models.CharField(max_length=127)
     max_length = models.PositiveSmallIntegerField()
+    required = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -167,12 +168,6 @@ class UserApplicationProperty(models.Model):
     value = models.TextField(max_length=1024, blank=True, null=True)
     url = models.URLField(blank=True, null=True)
     editable = models.BooleanField(default=False)
-    font = models.CharField(max_length=125, default="Arial")
-    font_size = models.PositiveSmallIntegerField(
-        default=12, validators=[MaxValueValidator(72)])
-    is_bold = models.BooleanField(default=False)
-    is_italic = models.BooleanField(default=False)
-    is_underline = models.BooleanField(default=False)
 
 
 class ApplicationHistory(models.Model):

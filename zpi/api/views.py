@@ -11,9 +11,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import User, Application, Department, ApplicationDepartment, UserApplication, ApplicationProperty, Property
+from .models import User, Application, Department, ApplicationDepartment, UserApplication, ApplicationProperty, \
+    Property, UserApplicationProperty
 from .serializers import UserSerializer, ApplicationSerializer, ShortApplicationSerializer, DepartmentSerializer, \
-    ApplicationPropertySerializer, UserApplicationSerializer, ClassicApplicationSerializer, PropertySerializer
+    ApplicationPropertySerializer, UserApplicationSerializer, ClassicApplicationSerializer, PropertySerializer, \
+    UserApplicationPropertySerializer
 from .utils.utils import create_application_department, create_user_application_property, get_application_post_data
 from .utils.docFormatter import DocFormatter
 
@@ -191,7 +193,7 @@ class UserApplicationView(APIView):
 
     def get(self, request, id):
         application = self.get_object(id)
-        serializer = ApplicationSerializer(application)
+        serializer = UserApplicationSerializer(application)
 
         return Response({"data": serializer.data}, status=200)
 
@@ -212,22 +214,20 @@ class UserApplicationView(APIView):
         else:
             return Response({"message": serializer.errors}, status=400)
 
+    def patch(self, request, id):
+        request_data = dict(request.POST)
+        if 'csrfmiddlewaretoken' in request_data:
+            del request_data['csrfmiddlewaretoken']
+        application_id = None
+        for key, value in request_data.items():
+            user_application = UserApplicationProperty.objects.filter(user_application__pk=id, property__name=key).first()
+            application_id = user_application.user_application.application.pk
+            user_application.value = value[0]
+            user_application.save()
+        document = DocFormatter(Application.objects.get(pk=application_id))
+        document.update_document(id)
+        return Response({'message': "Successfully updated"}, status=200)
 
-    #
-    # def patch(self, request, id):
-    #     request_data = dict(request.POST)
-    #     post_data = get_application_post_data(request)
-    #
-    #     application = self.get_object(id)
-    #     serializer = ApplicationSerializer(
-    #         application, data=post_data, partial=True)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         ApplicationDepartment.objects.filter(application=id).delete()
-    #         create_application_department(id, request_data['departments'])
-    #         return Response(data=serializer.data)
-    #     return Response({'message': "Wrong parameters"}, status=400)
-    #
     def delete(self, request, id):
         user_application = self.get_object(id)
         user_application.delete()
@@ -243,3 +243,13 @@ class ApplicationPropertyListView(ListAPIView):
         application_properties = ApplicationProperty.objects.filter(application__id=id).values_list('property', flat=True)
         properties = Property.objects.filter(pk__in=list(application_properties))
         return properties
+
+
+class UserApplicationPropertyListView(ListAPIView):
+    serializer_class = UserApplicationPropertySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        id = self.kwargs['id']
+        user_application_properties = UserApplicationProperty.objects.filter(user_application__id=id)
+        return user_application_properties

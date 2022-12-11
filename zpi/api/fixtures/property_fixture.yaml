@@ -4,6 +4,7 @@
     name: CURRENT_DATE
     property_type: date
     max_length: 10
+    required: True
 - model: api.property
   pk: 2
   fields:
@@ -28,12 +29,14 @@
     name: STUDENT_NAME_SURNAME
     property_type: varchar
     max_length: 1000
+    required: True
 - model: api.property
   pk: 6
   fields:
     name: STUDENT_ID
     property_type: varchar
     max_length: 15
+    required: True
 - model: api.property
   pk: 7
   fields:
@@ -52,9 +55,11 @@
     name: STUDY_DEGREE
     property_type: boolean
     max_length: 1
+    required: True
 - model: api.property
   pk: 10
   fields:
     name: STATIONARY
     property_type: boolean
     max_length: 1
+    required: True

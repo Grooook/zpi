@@ -25,7 +25,7 @@
                     </div>
                 </form>
                 {% for application in applications %}
-                    <div class="card my-2 bg-{{ application.color }}">
+                    <div class="card my-2 bg-{{ application.colored_status }}">
                         <div class="row  justify-content-between m-2">
                             <div class="col">
                                 <h5 class="card-title text-white">{{ application.name }}</h5>
@@ -33,9 +33,15 @@
                             <div class="col-auto">
                                 <a class="card-link text-white" href="{{ application.file }}">{% trans "Download file" %}</a>
                             </div>
+                            {% if application.status == 'c' %}
                             <div class="col-auto">
                                 <a class="card-link text-white" href="{% url 'front:delete_user_application' id=application.id %}">{% trans "Delete" %}</a>
+                                <a class="card-link text-white" href="{% url 'front:update_user_application' id=application.id %}">{% trans "Update data" %}</a>
+                                <a class="card-link text-white" href="{% url 'front:delete_user_application' id=application.id %}">{% trans "Send" %}</a>
                             </div>
+                            {% elif application.status == 'p' %}
+                                <a class="card-link text-white" href="{% url 'front:delete_user_application' id=application.id %}">{% trans "Undo" %}</a>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}

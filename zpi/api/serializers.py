@@ -78,7 +78,7 @@ class ShortApplicationSerializer(serializers.ModelSerializer):
 class UserApplicationSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(
         method_name='get_application_name')
-    color = serializers.SerializerMethodField(method_name='get_colored_status')
+    colored_status = serializers.SerializerMethodField(method_name='get_colored_status')
 
     class Meta:
         model = UserApplication
@@ -103,11 +103,19 @@ class UserApplicationSerializer(serializers.ModelSerializer):
             return 'danger'
 
 
-
 class UserApplicationPropertySerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField(
+        method_name='get_application_name')
+
     class Meta:
         model = UserApplicationProperty
         fields = '__all__'
+        extra_fields = ('name', )
+
+    def get_application_name(self, instance):
+        property = Property.objects.get(pk=instance.property.pk)
+
+        return property.name
 
 
 class PropertySerializer(serializers.ModelSerializer):

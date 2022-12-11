@@ -1,8 +1,10 @@
+import os
+
 from docx import Document
 from docxtpl import DocxTemplate
 import re
 
-from api.models import ApplicationProperty, Property, UserApplication
+from api.models import ApplicationProperty, Property, UserApplication, UserApplicationProperty
 
 from api.utils.utils import get_property_dict
 from api.serializers import UserApplicationSerializer
@@ -46,6 +48,20 @@ class DocFormatter:
         document = DocxTemplate(self.file_path)
         document.render(context=context)
         new_path = "documents/processed/" + self.application.file.name.split('/')[-1]
+        document.save("media/" + new_path)
+        user_application = UserApplication.objects.get(pk=user_application)
+        user_application.file = new_path
+        user_application.save()
+
+
+    def update_document(self, user_application):
+        user_application_properties = UserApplicationProperty.objects.filter(user_application__pk=user_application).values('property__name', 'value')
+        context = {property['property__name']: property['value'] for property in user_application_properties}
+        document = DocxTemplate(self.file_path)
+        document.render(context=context)
+        new_path = "documents/processed/" + self.application.file.name.split('/')[-1]
+        if os.path.exists("media/" + new_path):
+            os.remove("media/" + new_path)
         document.save("media/" + new_path)
         user_application = UserApplication.objects.get(pk=user_application)
         user_application.file = new_path
