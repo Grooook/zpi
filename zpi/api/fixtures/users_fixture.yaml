@@ -9,13 +9,13 @@
     birth_date: null
     name: admin name
     surname: admin surname
-    department: 2
+    department: 4
     is_student: true
     is_admin: true
     is_active: true
-    is_teacher: false
+    is_teacher: true
     is_staff: true
-    is_dean: false
+    is_dean: true
     is_superuser: true
 - model: api.user
   pk: 2
@@ -28,14 +28,9 @@
     birth_date: null
     name: Hleb
     surname: Liaonik
-    department: 3
+    department: 4
     is_student: true
-    is_admin: false
     is_active: true
-    is_teacher: false
-    is_staff: false
-    is_dean: false
-    is_superuser: false
 - model: api.user
   pk: 3
   fields:
@@ -48,10 +43,48 @@
     name: Agata
     surname: Marcinkowska
     department: 4
-    is_student: false
-    is_admin: false
     is_active: true
-    is_teacher: false
     is_staff: true
-    is_dean: false
+- model: api.user
+  pk: 4
+  fields:
+    password: pbkdf2_sha256$390000$khP7TSfq79D6jznuvcxvas$zezLSO4bMn2I9q640uCQfkMZry9RX4SFhBrn1MFbjAk=
+    last_login: null
+    user_id: null
+    email: prodziekan@example.com
+    username: vd1
+    birth_date: null
+    name: Szymon
+    surname: Mickiewicz
+    department: 4
+    is_active: true
+    is_vice_dean: True
+- model: api.user
+  pk: 5
+  fields:
+    password: pbkdf2_sha256$390000$khP7TSfq79D6jznuvcxvas$zezLSO4bMn2I9q640uCQfkMZry9RX4SFhBrn1MFbjAk=
+    last_login: null
+    user_id: null
+    email: dziekan@example.com
+    username: d1
+    birth_date: null
+    name: Paweł
+    surname: Lewandowski
+    department: 4
+    is_active: true
+    is_dean: true
     is_superuser: true
+- model: api.user
+  pk: 6
+  fields:
+    password: pbkdf2_sha256$390000$khP7TSfq79D6jznuvcxvas$zezLSO4bMn2I9q640uCQfkMZry9RX4SFhBrn1MFbjAk=
+    last_login: null
+    user_id: null
+    email: prowadzocy@example.com
+    username: t1
+    birth_date: null
+    name: Michał
+    surname: Zalewski
+    department: 4
+    is_active: true
+    is_teacher: true

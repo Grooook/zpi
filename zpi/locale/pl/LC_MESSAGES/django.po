@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-06 12:00+0100\n"
+"POT-Creation-Date: 2022-12-11 23:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,38 +20,130 @@ msgstr ""
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: templates/login.html:16
-msgid "Login"
-msgstr "Login"
+#: templates/application_form.html:6 templates/user_application_form.html:6
+#, fuzzy
+#| msgid "Add application"
+msgid "Create application"
+msgstr "Dodaj wniosek"
 
-#: templates/login.html:24
-msgid "Password"
-msgstr "Hasło"
+#: templates/applications.html:5
+#, fuzzy
+#| msgid "All applications"
+msgid "Aaplications"
+msgstr "Wnioski"
 
-#: templates/login.html:33 templates/navbar.html:55
-msgid "Sign in"
-msgstr "Zaloguj się"
-
-#: templates/main.html:17
+#: templates/applications.html:19 templates/main.html:17
+#: templates/user_applications.html:19
 msgid "Start typing application name..."
 msgstr "Zacznij wpisywać nazwę wniosku..."
 
-#: templates/main.html:26
+#: templates/applications.html:26
+#, fuzzy
+#| msgid "Start typing application name..."
+msgid "Start typing department name..."
+msgstr "Zacznij wpisywać nazwę wniosku..."
+
+#: templates/applications.html:38
+msgid "Is active"
+msgstr "Aktywny"
+
+#: templates/applications.html:48 templates/user_applications.html:24
+msgid "Apply"
+msgstr "Zatwierdź"
+
+#: templates/applications.html:58 templates/applications_to_check.html:20
+#: templates/user_applications.html:34
+msgid "Download file"
+msgstr "Pobierz plik"
+
+#: templates/applications.html:61 templates/applications_to_check.html:23
+msgid "Create"
+msgstr "Utwórz"
+
+#: templates/applications.html:65
+msgid "Update"
+msgstr "Zaktualizuj"
+
+#: templates/applications.html:67 templates/user_applications.html:38
+msgid "Delete"
+msgstr "Usuń"
+
+#: templates/applications.html:76 templates/user_applications.html:51
+#, fuzzy
+#| msgid "My applications"
+msgid "No applications"
+msgstr "Moje wnioski"
+
+#: templates/applications.html:80
+msgid "Add new"
+msgstr "Dodaj nowy"
+
+#: templates/applications_to_check.html:5
+#, fuzzy
+#| msgid "All applications"
+msgid "Applications to check"
+msgstr "Wnioski"
+
+#: templates/applications_to_check.html:27
+msgid "Reject"
+msgstr "Odrzuć"
+
+#: templates/applications_to_check.html:29
+msgid "Accept"
+msgstr "Zatwierdź"
+
+#: templates/login.html:14
+msgid "Login"
+msgstr "Login"
+
+#: templates/login.html:18
+msgid "Password"
+msgstr "Hasło"
+
+#: templates/login.html:26 templates/navbar.html:56
+msgid "Sign in"
+msgstr "Zaloguj się"
+
+#: templates/main.html:30
 msgid "Search"
 msgstr "Szukaj"
 
-#: templates/navbar.html:28
+#: templates/navbar.html:28 templates/user_applications.html:55
 msgid "Add application"
 msgstr "Dodaj wniosek"
 
-#: templates/navbar.html:32
-msgid "All applications"
+#: templates/navbar.html:34
+msgid "To check"
+msgstr "Wnioski do sprawdzenia"
+
+#: templates/navbar.html:38
+#, fuzzy
+#| msgid "All applications"
+msgid "Applications"
 msgstr "Wnioski"
 
-#: templates/navbar.html:35
+#: templates/navbar.html:43
 msgid "My applications"
 msgstr "Moje wnioski"
 
-#: templates/navbar.html:43
+#: templates/navbar.html:49
 msgid "Logout"
 msgstr "Wyloguj się"
+
+#: templates/user_applications.html:5
+#, fuzzy
+#| msgid "All applications"
+msgid "Aapplications"
+msgstr "Wnioski"
+
+#: templates/user_applications.html:39
+msgid "Update data"
+msgstr "Zaktualizuj dane"
+
+#: templates/user_applications.html:40
+msgid "Send"
+msgstr "Wyślij"
+
+#: templates/user_applications.html:42
+msgid "Undo"
+msgstr "Cofnij"

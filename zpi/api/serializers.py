@@ -33,27 +33,17 @@ class ApplicationSerializer(serializers.ModelSerializer):
         method_name='get_departments')
     is_users_application = serializers.SerializerMethodField(
         method_name='is_application_created_by_user')
-    obligatory = serializers.SerializerMethodField(
-        method_name='get_obligatory')
 
     class Meta:
         model = Application
         fields = '__all__'
-        extra_fields = ('is_users_application', 'departments', 'obligatory')
+        extra_fields = ('is_users_application', 'departments')
 
     def get_departments(self, instance):
         departments = ApplicationDepartment.objects.filter(
             application=instance.pk).values('department')
 
         return [department['department'] for department in departments]
-
-    def get_obligatory(self, instance):
-        obligatory_data = []
-        if instance.for_student:
-            obligatory_data.append('for_student')
-        if instance.for_worker:
-            obligatory_data.append('for_worker')
-        return obligatory_data
 
     def is_application_created_by_user(self, instance):
         request = self.context.get('request')

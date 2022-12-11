@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from docx import Document
 from docxtpl import DocxTemplate
@@ -47,7 +48,7 @@ class DocFormatter:
         context = {key: context[key][0] for key in context.keys()}
         document = DocxTemplate(self.file_path)
         document.render(context=context)
-        new_path = "documents/processed/" + self.application.file.name.split('/')[-1]
+        new_path = "documents/processed/" + datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p") + '_' + self.application.file.name.split('/')[-1]
         document.save("media/" + new_path)
         user_application = UserApplication.objects.get(pk=user_application)
         user_application.file = new_path
@@ -59,7 +60,7 @@ class DocFormatter:
         context = {property['property__name']: property['value'] for property in user_application_properties}
         document = DocxTemplate(self.file_path)
         document.render(context=context)
-        new_path = "documents/processed/" + self.application.file.name.split('/')[-1]
+        new_path = "documents/processed/" + datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p") + '_' + self.application.file.name.split('/')[-1]
         if os.path.exists("media/" + new_path):
             os.remove("media/" + new_path)
         document.save("media/" + new_path)

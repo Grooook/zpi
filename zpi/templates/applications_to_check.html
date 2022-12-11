@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+{% trans "Applications to check" %}
+{% endblock title %}
+{% block scripts %}
+{% endblock scripts %}
+{% block content %}
+<div class="d-flex justify-content-center my-5">
+    <div class="w-50">
+        {% if applications %}
+        {% for application in applications %}
+        <div class="card my-2">
+            <div class="row  justify-content-between m-2">
+                <div class="col">
+                    <h5 class="card-title">{{ application.name }}</h5>
+                </div>
+                <div class="col-auto">
+                    <a class="card-link" href="{{ application.file }}">{% trans "Download file" %}</a>
+                    {% if application.is_active and request.session.user.is_student %}
+                    <a class="card-link"
+                       href="{% url 'front:create_user_application' id=application.id %}">{% trans "Create" %}</a>
+                    {% endif %}
+                    {% if not request.session.user.is_staff and not request.session.user.is_student and application.status == 'p' %}
+                    <a class="card-link text-danger"
+                       href="{% url 'front:change_user_application_status' id=application.id %}?status=r">{% trans "Reject" %}</a>
+                    <a class="card-link text-success"
+                       href="{% url 'front:change_user_application_status' id=application.id %}?status=a">{% trans "Accept" %}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

@@ -46,24 +46,23 @@ def logout(request):
         del request.session['is_authenticated']
         del request.session['auth_token']
         del request.session['user']
-    return redirect('front:main')
+    return redirect('front:login')
 
 
 class ApplicationListView(View):
     def get(self, request):
-        name = request.GET.get('name', None)
-        is_active = request.GET.get('is_active', None)
-        department = request.GET.get('department', None)
-        get_data = {
-            'name': name,
-            'is_active': is_active,
-            'department': department,
-        }
-        applications = requests.get('http://localhost:8000/api/applications/', data=get_data,
+        applications = requests.get('http://localhost:8000/api/applications/', data=dict(request.GET),
                                     headers=generate_request_headers(request))
         departments = requests.get('http://localhost:8000/api/basic/departments/',
                                    headers=generate_request_headers(request))
         return render(request, 'applications.html', {'applications': applications.json(), 'departments': departments.json()})
+
+
+class ApplicationToCheckListView(View):
+    def get(self, request):
+        applications = requests.get('http://localhost:8000/api/user/applications/to/check/', data=dict(request.GET),
+                                    headers=generate_request_headers(request))
+        return render(request, 'applications_to_check.html', {'applications': applications.json()})
 
 
 class UserApplicationListView(View):
@@ -101,9 +100,13 @@ class ApplicationCreateView(View):
 
 class UserApplicationCreateView(View):
     def get(self, request, id):
+        context = {}
         response = requests.get(f'http://localhost:8000/api/application/{id}/properties/',
                                 headers=generate_request_headers(request))
-        form = UserApplicationForm()
+        if response.status_code == 404:
+            return redirect('front:user_applications')
+        context['application'] = {property['name']: property['required'] for property in response.json()}
+        form = UserApplicationForm(data=context['application'], user_data=request.session['user'])
         context = {'submit': 'Add application', 'form': form}
 
         return render(request, 'user_application_form.html', context)
@@ -161,7 +164,12 @@ class UserApplicationUpdateView(View):
         if response.status_code == 404:
             return redirect('front:user_applications')
         context['application'] = {property['name']: property['value'] for property in response.json()}
-        context['form'] = UserApplicationForm(initial=context['application'])
+        response = requests.get(f'http://localhost:8000/api/application/{id}/properties/',
+                                headers=generate_request_headers(request))
+        if response.status_code == 404:
+            return redirect('front:user_applications')
+        context['data'] = {property['name']: property['required'] for property in response.json()}
+        context['form'] = UserApplicationForm(data=context['data'], user_data=request.session['user'], initial=context['application'])
 
         return render(request, 'user_application_form.html', context)
 
@@ -173,6 +181,16 @@ class UserApplicationUpdateView(View):
         messages.error(request, response.json())
 
         return redirect('front:update_user_application', id=id)
+
+
+class UserApplicationStatusUpdateView(View):
+    def get(self, request, id):
+        response = requests.patch(f'http://localhost:8000/api/user/application/{id}/status/update/', data=dict(request.GET),
+                                  headers=generate_request_headers(request))
+        if response.status_code != 200:
+            messages.error(request, response.json())
+
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 class UserApplicationDeleteView(View):

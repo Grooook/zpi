@@ -54,9 +54,5 @@ def get_application_post_data(request, user=None, file=None):
     if user: post_data['creator'] = user
     if file: post_data['file'] = file
     post_data['is_active'] = False if 'is_active' not in request_data else post_data['is_active']
-    if 'obligatory' in request_data:
-        post_data['for_student'] = True if 'for_student' in request_data['obligatory'] else False
-        post_data['for_worker'] = True if 'for_worker' in request_data['obligatory'] else False
-        del post_data['obligatory']
 
     return post_data

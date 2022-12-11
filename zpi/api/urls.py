@@ -6,7 +6,8 @@ from rest_framework import routers
 
 from .views import user_login, user_logout, change_password, download_file, ShortApplicationListView, \
     ApplicationListView, ApplicationView, DepartmentListView, ApplicationPropertyListView, \
-    UserApplicationView, UserApplicationsListView, UserApplicationPropertyListView
+    UserApplicationView, UserApplicationsListView, UserApplicationPropertyListView, UserApplicationStatusUpdateView, \
+    UserApplicationsToCheckListView
 
 urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
@@ -31,8 +32,12 @@ urlpatterns = [
 
     path('user/applications/', UserApplicationsListView.as_view(),
          name="user_applications"),
+    path('user/applications/to/check/', UserApplicationsToCheckListView.as_view(),
+         name="user_applications_to_check"),
     path('user/application/<int:id>/',
          UserApplicationView.as_view(), name='user-application'),
+    path('user/application/<int:id>/status/update/',
+         UserApplicationStatusUpdateView.as_view(), name='user-application'),
     path('user/application/<int:id>/properties/',
          UserApplicationPropertyListView.as_view(), name='user-application-properties'),
 

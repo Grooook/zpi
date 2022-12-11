@@ -62,4 +62,3 @@
     name: STATIONARY
     property_type: boolean
     max_length: 1
-    required: True

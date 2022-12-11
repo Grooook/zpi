@@ -28,14 +28,21 @@
                                     {% trans "Add application" %}
                                 </a>
                             {% endif %}
+                            {% if request.session.user.is_teacher or  request.session.user.is_vice_dean or request.session.user.is_dean %}
                             <a class="nav-link active"
                                aria-current="page"
-                               href="{% url 'front:applications' %}">{% trans "All applications" %}</a>
+                               href="{% url 'front:applications_to_check' %}">{% trans "To check" %}</a>
+                            {% endif %}
                             <a class="nav-link active"
                                aria-current="page"
-                               href="{% url 'front:user_applications' %}">
-                                {% trans "My applications" %}
-                            </a>
+                               href="{% url 'front:applications' %}">{% trans "Applications" %}</a>
+                            {% if request.session.user.is_student %}
+                                <a class="nav-link active"
+                                   aria-current="page"
+                                   href="{% url 'front:user_applications' %}">
+                                    {% trans "My applications" %}
+                                </a>
+                            {% endif %}
                         </ul>
                         <a href="{% url 'front:logout' %}"
                            class="nav-link active"

@@ -35,6 +35,7 @@ class MyAccountManager(BaseUserManager):
         user.is_active = True
         user.is_admin = True
         user.is_staff = True
+        user.is_vice_dean = True
         user.is_dean = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -59,6 +60,7 @@ class User(AbstractBaseUser):
     is_student = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
+    is_vice_dean = models.BooleanField(default=False)
     is_dean = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -70,9 +72,15 @@ class User(AbstractBaseUser):
     def __str__(self):
         return str(self.email)
 
-    def has_perm(self, perm, obj=None): return self.is_superuser
+    def can_check_permissions(self,):
+        permissions = []
+        permissions.append('t') if self.is_teacher else None
+        permissions.append('vd') if self.is_vice_dean else None
+        permissions.append('d') if self.is_dean else None
 
-    def has_module_perms(self, app_label): return self.is_superuser
+        return permissions
+
+
 
 
 class Application(models.Model):
@@ -87,8 +95,6 @@ class Application(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     expired = models.DateField(blank=True, null=True)
     last_update = models.DateTimeField(auto_now=True)
-    for_student = models.BooleanField(default=True)
-    for_worker = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     accepted_by = models.CharField(max_length=2, default='d', choices=choices)
     file = models.FileField(upload_to='documents/')
@@ -171,6 +177,8 @@ class UserApplicationProperty(models.Model):
 
 
 class ApplicationHistory(models.Model):
-    application = models.ForeignKey(Application, on_delete=models.CASCADE)
-    date = models.DateTimeField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_application = models.ForeignKey(UserApplication, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=32)
+    new_status = models.CharField(max_length=32)

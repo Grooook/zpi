@@ -2,6 +2,7 @@ import os
 
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
@@ -12,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import User, Application, Department, ApplicationDepartment, UserApplication, ApplicationProperty, \
-    Property, UserApplicationProperty
+    Property, UserApplicationProperty, ApplicationHistory
 from .serializers import UserSerializer, ApplicationSerializer, ShortApplicationSerializer, DepartmentSerializer, \
     ApplicationPropertySerializer, UserApplicationSerializer, ClassicApplicationSerializer, PropertySerializer, \
     UserApplicationPropertySerializer
@@ -108,6 +109,22 @@ class UserApplicationsListView(ListAPIView):
         return user_applications
 
 
+class UserApplicationsToCheckListView(ListAPIView):
+    serializer_class = UserApplicationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        user_applications = UserApplication.objects.filter(
+            application__accepted_by__in=user.can_check_permissions(), status='p').order_by('-submission_date')
+        name = self.request.data.get('name', None)
+        if name:
+            user_applications = user_applications.filter(
+                application__name__contains=name)
+
+        return user_applications
+
+
 class ApplicationListView(ListCreateAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
@@ -125,7 +142,7 @@ class ApplicationListView(ListCreateAPIView):
             application_ids = ApplicationDepartment.objects.filter(
                 department=user.department).values_list('application')
             applications = applications.filter(
-                is_active=1, for_student=1, pk__in=application_ids)
+                is_active=1, pk__in=application_ids)
         elif is_active:
             applications = applications.filter(is_active=is_active)
         if user.is_staff and department:
@@ -133,6 +150,7 @@ class ApplicationListView(ListCreateAPIView):
             application_ids = ApplicationDepartment.objects.filter(
                 department=department.pk).values_list('application')
             applications = applications.filter(pk__in=application_ids)
+
         return applications
 
     def create(self, request, *args, **kwargs):
@@ -158,7 +176,7 @@ class ApplicationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
-        return Application.objects.get(pk=pk)
+        return get_object_or_404(Application, pk=pk)
 
     def get(self, request, id):
         application = self.get_object(id)
@@ -182,14 +200,14 @@ class ApplicationView(APIView):
     def delete(self, request, id):
         application = self.get_object(id)
         application.delete()
-        return Response({"message": 'Successful delete'}, status=200)
+        return Response({"message": 'Successfully deleted'}, status=200)
 
 
 class UserApplicationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
-        return UserApplication.objects.get(pk=pk)
+        return get_object_or_404(UserApplication,pk=pk)
 
     def get(self, request, id):
         application = self.get_object(id)
@@ -231,7 +249,30 @@ class UserApplicationView(APIView):
     def delete(self, request, id):
         user_application = self.get_object(id)
         user_application.delete()
-        return Response({"message": 'Successful delete'}, status=200)
+        return Response({"message": 'Successfully deleted'}, status=200)
+
+
+class UserApplicationStatusUpdateView(APIView):
+    def patch(self, request, id):
+        new_status = request.data.get('status', None)
+        user = request.user
+        if not new_status:
+            return Response({"message": "No status passed"}, status=400)
+        user_application = get_object_or_404(UserApplication, pk=id)
+        if (user_application.status == 'c' and new_status in ['p']) \
+                or (user_application.status == 'p' and new_status in ['a', 'r', 'd']):
+            history = ApplicationHistory()
+            history.user = user
+            history.user_application = user_application
+            history.status = user_application.status
+            history.new_status = new_status
+            history.save()
+
+            user_application.status = new_status
+            user_application.save()
+            return Response({"message": 'Successfully updated'}, status=200)
+
+        return Response({"message": 'Not available to change'}, status=400)
 
 
 class ApplicationPropertyListView(ListAPIView):

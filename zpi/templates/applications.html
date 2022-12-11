@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% block title %}
-    {% trans "Aapplications" %}
+    {% trans "Aaplications" %}
 {% endblock title %}
 {% block scripts %}
 {% endblock scripts %}
@@ -56,7 +56,7 @@
                         </div>
                         <div class="col-auto">
                             <a class="card-link" href="{{ application.file }}">{% trans "Download file" %}</a>
-                            {% if application.is_active %}
+                            {% if application.is_active and request.session.user.is_student %}
                                 <a class="card-link"
                                    href="{% url 'front:create_user_application' id=application.id %}">{% trans "Create" %}</a>
                             {% endif %}

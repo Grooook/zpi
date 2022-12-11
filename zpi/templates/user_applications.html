@@ -33,19 +33,19 @@
                             <div class="col-auto">
                                 <a class="card-link text-white" href="{{ application.file }}">{% trans "Download file" %}</a>
                             </div>
-                            {% if application.status == 'c' %}
                             <div class="col-auto">
+                            {% if application.status == 'c' %}
                                 <a class="card-link text-white" href="{% url 'front:delete_user_application' id=application.id %}">{% trans "Delete" %}</a>
                                 <a class="card-link text-white" href="{% url 'front:update_user_application' id=application.id %}">{% trans "Update data" %}</a>
-                                <a class="card-link text-white" href="{% url 'front:delete_user_application' id=application.id %}">{% trans "Send" %}</a>
-                            </div>
+                                <a class="card-link text-white" href="{% url 'front:change_user_application_status' id=application.id %}?status=p">{% trans "Send" %}</a>
                             {% elif application.status == 'p' %}
-                                <a class="card-link text-white" href="{% url 'front:delete_user_application' id=application.id %}">{% trans "Undo" %}</a>
+                                <a class="card-link text-white" href="{% url 'front:change_user_application_status' id=application.id %}?status=d">{% trans "Undo" %}</a>
                             {% endif %}
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
-            {% elif request.session.is_authenticated and request.session.user.is_staff %}
+            {% else %}
                 <div class="d-flex justify-content-center">
                     <div>
                         <h4>{% trans "No applications" %}</h4>
