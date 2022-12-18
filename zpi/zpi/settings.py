@@ -179,6 +179,8 @@ ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
 
 AUTH_USER_MODEL = 'api.User'
 
+BASE_URL = os.environ.get("BASE_URL")
+
 expiring_time = 15*6000
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False

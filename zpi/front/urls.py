@@ -14,7 +14,7 @@ urlpatterns = [
     path('login/', login, name='login'),
     path('logout/', logout, name='logout'),
 
-    path('create_new_application/', ApplicationCreateView.as_view(),
+    path('create/new/application/', ApplicationCreateView.as_view(),
          name='create_new_application'),
 
     path('applications/', ApplicationListView.as_view(), name='applications'),
@@ -26,7 +26,7 @@ urlpatterns = [
     path('application/<int:id>/delete/',
          ApplicationDeleteView.as_view(), name='delete_application'),
 
-    path('user_applications/', UserApplicationListView.as_view(),
+    path('user/applications/', UserApplicationListView.as_view(),
          name='user_applications'),
     path('user/application/<int:id>/create/',
          UserApplicationCreateView.as_view(), name='create_user_application'),

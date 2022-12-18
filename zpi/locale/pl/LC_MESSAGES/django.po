@@ -117,8 +117,6 @@ msgid "To check"
 msgstr "Wnioski do sprawdzenia"
 
 #: templates/navbar.html:38
-#, fuzzy
-#| msgid "All applications"
 msgid "Applications"
 msgstr "Wnioski"
 

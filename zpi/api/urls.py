@@ -19,7 +19,7 @@ urlpatterns = [
     path('login/', user_login, name='login'),
     path('logout/', user_logout, name='logout'),
     path('file/download/', download_file, name='download_file'),
-    path('change_password/', change_password, name='change_password'),
+    # path('change_password/', change_password, name='change_password'),
 
     path('basic/applications/', ShortApplicationListView.as_view(),
          name="get_applications"),
