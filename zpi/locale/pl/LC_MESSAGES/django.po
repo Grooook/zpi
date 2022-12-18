@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-11 23:23+0100\n"
+"POT-Creation-Date: 2022-12-19 00:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,16 +20,64 @@ msgstr ""
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
+#: front/forms.py:65
+msgid "current date"
+msgstr "data"
+
+#: front/forms.py:65
+msgid "student id"
+msgstr "indeks"
+
+#: front/forms.py:65
+msgid "student name surname"
+msgstr "Imię i nazwisko"
+
+#: front/forms.py:65
+msgid "study degree"
+msgstr "stopień studiów"
+
+#: front/forms.py:65
+msgid "student specialty"
+msgstr "kierunek"
+
+#: front/forms.py:65
+msgid "student direction"
+msgstr "specjalność"
+
+#: front/forms.py:65
+msgid "stationary"
+msgstr "stacjonarny"
+
+#: front/forms.py:65
+msgid "justification"
+msgstr "uzasadnienie"
+
+#: api/models.py:88
+msgid "Staff"
+msgstr "Pracownik"
+
+#: api/models.py:89 front/forms.py:17
+msgid "Teacher"
+msgstr "Prowadzący"
+
+#: api/models.py:90 front/forms.py:17
+msgid "Vice-dean"
+msgstr "Prodziekan"
+
+#: api/models.py:91 front/forms.py:17
+msgid "Dean"
+msgstr "Dziekan"
+
+#: api/views.py:231 api/views.py:248
+msgid "must have max length: "
+msgstr ""
+
 #: templates/application_form.html:6 templates/user_application_form.html:6
-#, fuzzy
-#| msgid "Add application"
 msgid "Create application"
 msgstr "Dodaj wniosek"
 
 #: templates/applications.html:5
-#, fuzzy
-#| msgid "All applications"
-msgid "Aaplications"
+msgid "All applications"
 msgstr "Wnioski"
 
 #: templates/applications.html:19 templates/main.html:17
@@ -38,10 +86,8 @@ msgid "Start typing application name..."
 msgstr "Zacznij wpisywać nazwę wniosku..."
 
 #: templates/applications.html:26
-#, fuzzy
-#| msgid "Start typing application name..."
 msgid "Start typing department name..."
-msgstr "Zacznij wpisywać nazwę wniosku..."
+msgstr "Zacznij wpisywać nazwę wydziłu..."
 
 #: templates/applications.html:38
 msgid "Is active"
@@ -69,20 +115,16 @@ msgid "Delete"
 msgstr "Usuń"
 
 #: templates/applications.html:76 templates/user_applications.html:51
-#, fuzzy
-#| msgid "My applications"
 msgid "No applications"
-msgstr "Moje wnioski"
+msgstr "Nie ma wniosków"
 
 #: templates/applications.html:80
 msgid "Add new"
 msgstr "Dodaj nowy"
 
 #: templates/applications_to_check.html:5
-#, fuzzy
-#| msgid "All applications"
 msgid "Applications to check"
-msgstr "Wnioski"
+msgstr "Wnioski do sprawdzenia"
 
 #: templates/applications_to_check.html:27
 msgid "Reject"
@@ -129,9 +171,7 @@ msgid "Logout"
 msgstr "Wyloguj się"
 
 #: templates/user_applications.html:5
-#, fuzzy
-#| msgid "All applications"
-msgid "Aapplications"
+msgid "Applications"
 msgstr "Wnioski"
 
 #: templates/user_applications.html:39

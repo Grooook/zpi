@@ -11,6 +11,7 @@ from rest_framework.generics import ListCreateAPIView, ListAPIView, CreateAPIVie
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.utils.translation import gettext as _
 
 from .models import User, Application, Department, ApplicationDepartment, UserApplication, ApplicationProperty, \
     Property, UserApplicationProperty, ApplicationHistory
@@ -222,6 +223,12 @@ class UserApplicationView(APIView):
         }
         serializer = UserApplicationSerializer(data=data)
         if serializer.is_valid():
+            request_data = dict(request.POST)
+            properties = Property.objects.all()
+            for property in properties:
+                if property.name in request_data and len(request_data[property.name][0]) > property.max_length:
+                    return Response({"message": property.name + ' ' + \
+                                                _('must have max length: ') + str(property.max_length)}, status=400)
             serializer.save()
             create_user_application_property(
                 serializer.data['id'], dict(request.POST))
@@ -234,6 +241,11 @@ class UserApplicationView(APIView):
 
     def patch(self, request, id):
         request_data = dict(request.POST)
+        properties = Property.objects.all()
+        for property in properties:
+            if property.name in request_data and len(request_data[property.name][0]) > property.max_length:
+                return Response({"message": property.name + ' ' + \
+                                    _('must have max length: ') + str(property.max_length)}, status=400)
         if 'csrfmiddlewaretoken' in request_data:
             del request_data['csrfmiddlewaretoken']
         application_id = None
@@ -253,6 +265,8 @@ class UserApplicationView(APIView):
 
 
 class UserApplicationStatusUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def patch(self, request, id):
         new_status = request.data.get('status', None)
         user = request.user

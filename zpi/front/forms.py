@@ -1,6 +1,7 @@
-from datetime import datetime
+import datetime
 
 from django import forms
+from django.utils.translation import gettext as _
 
 
 class ApplicationForm(forms.Form):
@@ -13,13 +14,14 @@ class ApplicationForm(forms.Form):
     accepted_by = forms.ChoiceField(label='')
 
     def __init__(self, *args, **kwargs):
-        accepted_by = (('s', 'Staff'), ('t', 'Teacher'), ('vd', 'Vice-dean'), ('d', 'Dean'),)
+        accepted_by = (('t', _('Teacher')), ('vd', _('Vice-dean')), ('d', _('Dean')),)
         choices = kwargs.pop('departments')
         super(ApplicationForm, self).__init__(*args, **kwargs)
         self.fields['departments'].choices = [
             (choice['id'], choice['name']) for choice in choices]
         self.fields['accepted_by'].choices = accepted_by
         self.fields['accepted_by'].initial = 'd'
+        self.fields['file'].widget.attrs.update({'accept': '.doc, .docx'})
 
         if 'initial' not in kwargs:
             self.fields['departments'].initial = [choice['id']
@@ -29,8 +31,7 @@ class ApplicationForm(forms.Form):
 
 
 class UserApplicationForm(forms.Form):
-    CURRENT_DATE = forms.DateField(required=False, initial=datetime.today(
-    ), widget=forms.DateInput(attrs={'type': 'date', 'readonly': 'True'}))
+    CURRENT_DATE = forms.DateField(required=False, initial=datetime.datetime.now().strftime("%d/%m/%Y"))
     STUDENT_ID = forms.CharField(
         required=False, widget=forms.TextInput(attrs={'autoComplete': "off", 'readonly': 'True'}))
     STUDENT_NAME_SURNAME = forms.CharField(
@@ -53,16 +54,14 @@ class UserApplicationForm(forms.Form):
         data = kwargs.pop('data')
         user = kwargs.pop('user_data')
         super(UserApplicationForm, self).__init__(*args, **kwargs)
+        self.fields['CURRENT_DATE'].widget.attrs.update({'readonly': 'True'})
         self.fields['STUDENT_ID'].initial = user['email'].split('@')[0]
         self.fields['STUDENT_NAME_SURNAME'].initial = user['surname'] + ' ' + user['name']
+
         for field in list(self.fields):
             if field not in data:
                 del self.fields[field]
             else:
-                self.fields[field].required = data[field]
-
-
-        # if 'initial' not in kwargs:
-        #     self.fields['departments'].initial = [choice['id'] for choice in choices]
-        # else:
-        #     del self.fields['file']
+                self.fields[field].label = _(field.replace("_", " ").lower())
+                self.fields[field].required = data[field]['required']
+                self.fields[field].widget.attrs.update({'maxlength': data[field]['max_length']})

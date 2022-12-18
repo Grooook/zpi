@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import MaxValueValidator
 from django.db import models
 from rest_framework.exceptions import ValidationError
+from .validators import validate_file_extension
+from django.utils.translation import gettext as _
 
 
 class MyAccountManager(BaseUserManager):
@@ -81,14 +83,12 @@ class User(AbstractBaseUser):
         return permissions
 
 
-
-
 class Application(models.Model):
     choices = (
-        ('s', 'Staff'),
-        ('t', 'Teacher'),
-        ('vd', 'Vice-dean'),
-        ('d', 'Dean'),
+        ('s', _('Staff')),
+        ('t', _('Teacher')),
+        ('vd', _('Vice-dean')),
+        ('d', _('Dean')),
     )
     name = models.CharField(max_length=127, unique=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -97,7 +97,7 @@ class Application(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     accepted_by = models.CharField(max_length=2, default='d', choices=choices)
-    file = models.FileField(upload_to='documents/')
+    file = models.FileField(upload_to='documents/', validators=[validate_file_extension])
 
     def __str__(self):
         return self.name
@@ -170,10 +170,7 @@ class UserApplicationProperty(models.Model):
     user_application = models.ForeignKey(
         UserApplication, on_delete=models.CASCADE)
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
-    position = models.PositiveSmallIntegerField()
     value = models.TextField(max_length=1024, blank=True, null=True)
-    url = models.URLField(blank=True, null=True)
-    editable = models.BooleanField(default=False)
 
 
 class ApplicationHistory(models.Model):

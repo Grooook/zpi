@@ -96,16 +96,19 @@ class UserApplicationSerializer(serializers.ModelSerializer):
 class UserApplicationPropertySerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(
         method_name='get_application_name')
+    application = serializers.SerializerMethodField(
+        method_name='get_application')
 
     class Meta:
         model = UserApplicationProperty
         fields = '__all__'
-        extra_fields = ('name', )
+        extra_fields = ('name', 'application')
 
     def get_application_name(self, instance):
-        property = Property.objects.get(pk=instance.property.pk)
+        return instance.property.name
 
-        return property.name
+    def get_application(self, instance):
+        return instance.user_application.application.pk
 
 
 class PropertySerializer(serializers.ModelSerializer):
