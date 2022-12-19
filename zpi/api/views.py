@@ -31,10 +31,10 @@ def user_login(request):
     if not user:
         user = User.objects.get_object_or_none(email=username)
     if not user or not check_password(password, user.password):
-        raise ValidationError({"message": f'Incorrect Login credentials'})
+        raise ValidationError({"message": _('Incorrect Login credentials')})
     if user:
         if user.is_active:
-            token, _ = Token.objects.get_or_create(user=user)
+            token, a = Token.objects.get_or_create(user=user)
             user_serialized = UserSerializer(user)
             response = {"user": user_serialized.data, "token": token.key}
             return Response(response)

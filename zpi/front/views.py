@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.views import View
 from django.contrib import messages
 from django.conf import settings
+from django.utils.translation import gettext as _
 
 from .decorators import authenticated_user
 from .utils import generate_request_headers
@@ -95,7 +96,7 @@ class ApplicationCreateView(View):
         if response.status_code == 401:
             return redirect('front:login')
         form = ApplicationForm(departments=response.json())
-        context = {'submit': 'Add application', 'form': form}
+        context = {'submit': _('Add application'), 'form': form}
 
         return render(request, 'application_form.html', context)
 
@@ -127,7 +128,7 @@ class UserApplicationCreateView(View):
         properties = {property['name']: {'required': property['required'], 'max_length': property['max_length']} \
                       for property in response.json()}
         form = UserApplicationForm(data=properties, user_data=request.session['user'])
-        context = {'submit': 'Add application', 'form': form}
+        context = {'submit': _('Add application'), 'form': form}
 
         return render(request, 'user_application_form.html', context)
 

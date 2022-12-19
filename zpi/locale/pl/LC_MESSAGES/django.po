@@ -20,35 +20,31 @@ msgstr ""
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: front/forms.py:65
+
+msgid "Incorrect Login credentials"
+msgstr "Niepoprawne dane do logowania"
+
 msgid "current date"
 msgstr "data"
 
-#: front/forms.py:65
 msgid "student id"
 msgstr "indeks"
 
-#: front/forms.py:65
 msgid "student name surname"
 msgstr "Imię i nazwisko"
 
-#: front/forms.py:65
 msgid "study degree"
 msgstr "stopień studiów"
 
-#: front/forms.py:65
 msgid "student specialty"
 msgstr "kierunek"
 
-#: front/forms.py:65
 msgid "student direction"
 msgstr "specjalność"
 
-#: front/forms.py:65
 msgid "stationary"
 msgstr "stacjonarny"
 
-#: front/forms.py:65
 msgid "justification"
 msgstr "uzasadnienie"
 
@@ -157,10 +153,6 @@ msgstr "Dodaj wniosek"
 #: templates/navbar.html:34
 msgid "To check"
 msgstr "Wnioski do sprawdzenia"
-
-#: templates/navbar.html:38
-msgid "Applications"
-msgstr "Wnioski"
 
 #: templates/navbar.html:43
 msgid "My applications"
