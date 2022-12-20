@@ -1,4 +1,6 @@
 import requests
+import urllib.request
+import io
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -52,6 +54,15 @@ def logout(request):
         del request.session['auth_token']
         del request.session['user']
     return redirect('front:login')
+
+
+@authenticated_user
+def open_pdf(request):
+    r = requests.get(request.GET['file'])
+    # print(r.content)
+    with io.BytesIO(r.content) as inmemoryfile:
+        print(inmemoryfile)
+    return redirect('front:applications_to_check')
 
 
 class ApplicationListView(View):

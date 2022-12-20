@@ -4,7 +4,7 @@ from django.urls import path, include
 
 from .views import main_page, login, logout, ApplicationListView, ApplicationCreateView, ApplicationUpdateView, \
     ApplicationDeleteView, UserApplicationCreateView, UserApplicationListView, UserApplicationDeleteView, \
-    UserApplicationUpdateView, UserApplicationStatusUpdateView, ApplicationToCheckListView
+    UserApplicationUpdateView, UserApplicationStatusUpdateView, ApplicationToCheckListView, open_pdf
 
 app_name = 'front'
 
@@ -13,6 +13,8 @@ urlpatterns = [
     path('', main_page, name='main'),
     path('login/', login, name='login'),
     path('logout/', logout, name='logout'),
+
+    path('file/', open_pdf, name='open_pdf'),
 
     path('create/new/application/', ApplicationCreateView.as_view(),
          name='create_new_application'),

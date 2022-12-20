@@ -98,6 +98,10 @@ msgstr "Zatwierdź"
 msgid "Download file"
 msgstr "Pobierz plik"
 
+#: templates/applications_to_check.html:21
+msgid "Open file"
+msgstr "Otwórz plik"
+
 #: templates/applications.html:61 templates/applications_to_check.html:23
 msgid "Create"
 msgstr "Utwórz"

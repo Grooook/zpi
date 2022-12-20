@@ -1,6 +1,9 @@
 import os
+import sys
 from datetime import datetime
+import subprocess
 
+from docx2pdf import convert
 from docx import Document
 from docxtpl import DocxTemplate
 import re
@@ -53,6 +56,13 @@ class DocFormatter:
         user_application = UserApplication.objects.get(pk=user_application)
         user_application.file = new_path
         user_application.save()
+        # subprocess.call(['soffice',
+        #                  # '--headless',
+        #                  '--convert-to',
+        #                  'pdf',
+        #                  '--outdir',
+        #                  "media/" + new_path,
+        #                  "media/documents/processed/"])
 
 
     def update_document(self, user_application):

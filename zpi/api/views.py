@@ -80,6 +80,26 @@ def download_file(request):
         return Response('File not found', status=404)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def download_pdf_file(request):
+    file = request.GET.get('file', None)
+    file = file.replace('http://localhost:8000/', '')
+    if os.path.exists(file):
+        with open(file, 'rb') as document:
+            content = document.read()
+            response = HttpResponse(
+                content,
+                content_type='application/msword'
+            )
+            file_name = file.split('/')[-1]
+            response['Content-Disposition'] = f'attachment; filename={file_name}'
+            response['Content-Length'] = len(content)
+            return response
+    else:
+        return Response('File not found', status=404)
+
+
 class ShortApplicationListView(ListAPIView):
     queryset = Application.objects.all()
     serializer_class = ShortApplicationSerializer

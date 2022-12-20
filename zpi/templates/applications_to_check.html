@@ -18,6 +18,7 @@
                 </div>
                 <div class="col-auto">
                     <a class="card-link" href="{{ application.file }}">{% trans "Download file" %}</a>
+<!--                    <a class="card-link" href="{% url 'front:open_pdf' %}?file={{application.file}}">{% trans "Open file" %}</a>-->
                     {% if application.is_active and request.session.user.is_student %}
                     <a class="card-link"
                        href="{% url 'front:create_user_application' id=application.id %}">{% trans "Create" %}</a>
